@@ -390,8 +390,14 @@ final class FlightSimulator {
         }
 
         let impactSpeed = v.surfaceVelocity.length
+        // A landing requires actually coming down. Without this check the rocket
+        // "lands" on the pad the moment after liftoff: it is still within the contact
+        // threshold, but its situation has already flipped to .flying.
+        let descending = v.verticalSpeed < -0.5
         switch v.situation {
         case .flying, .suborbital, .orbiting, .escaping:
+            // `where` would bind only to the last pattern, so guard inside the case.
+            guard descending else { break }
             if impactSpeed > v.impactTolerance {
                 destroy(reason: String(format: "Impact at %.0f m/s — tolerance was %.0f m/s",
                                        impactSpeed, v.impactTolerance))
