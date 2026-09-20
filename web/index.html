@@ -180,6 +180,123 @@
         font-size:12px; padding:12px 20px; border-radius:24px; min-height:46px; border:1px solid var(--edge);
         background:rgba(12,17,24,.6); color:var(--ink);}
   .pill.go{background:var(--accent); border-color:var(--accent); color:#06121F;}
+  /* ---------- map ---------- */
+  /* The flying controls have nothing to do in the map, and the node panel sits
+     exactly where the throttle lives. */
+  #hud.mapping #power, #hud.mapping #stick, #hud.mapping #stageStrip,
+  #hud.mapping #rollRow, #hud.mapping #pitchBox, #hud.mapping #navball{display:none;}
+  #mapUI{position:absolute; inset:0; display:none;}
+  #mapUI.on{display:block;}
+  #mapUI > *{pointer-events:auto;}
+  #mapInfo{position:absolute; left:calc(12px + env(safe-area-inset-left,0px));
+           top:calc(80px + env(safe-area-inset-top,0px)); padding:11px 14px; min-width:186px;
+           display:grid; gap:7px;}
+  #mapInfo .r{display:flex; justify-content:space-between; gap:18px; align-items:baseline;}
+  #mapInfo .r .lbl{letter-spacing:.12em;}
+  #mapEvent{margin-top:2px; padding-top:7px; border-top:1px solid var(--edge);
+            font-family:var(--label); text-transform:uppercase; letter-spacing:.08em; font-size:11px;}
+  #mapFocus{position:absolute; left:calc(12px + env(safe-area-inset-left,0px));
+            bottom:calc(12px + env(safe-area-inset-bottom,0px)); display:flex; gap:7px; padding:7px;}
+  #mapFocus button{min-width:62px; height:38px; border-radius:11px; background:rgba(12,17,24,.55);
+                   border:1px solid var(--edge); color:var(--ink-dim); font-family:var(--label);
+                   text-transform:uppercase; letter-spacing:.09em; font-size:11px;}
+  #mapFocus button.on{background:var(--accent); border-color:var(--accent); color:#06121F;}
+  #nodeBtn{position:absolute; right:calc(12px + env(safe-area-inset-right,0px));
+           bottom:calc(12px + env(safe-area-inset-bottom,0px)); min-width:128px; height:46px;
+           border-radius:14px; background:rgba(31,40,53,.92); border:1px solid var(--edge);
+           color:var(--ink); font-family:var(--label); text-transform:uppercase;
+           letter-spacing:.1em; font-size:12px;}
+  #nodeBtn.on{background:var(--amber); border-color:var(--amber); color:#2A1602;}
+  #nodePanel{position:absolute; right:calc(12px + env(safe-area-inset-right,0px));
+             bottom:calc(68px + env(safe-area-inset-bottom,0px)); padding:11px 12px;
+             display:none; gap:8px; grid-template-columns:auto 1fr auto; align-items:center; width:262px;}
+  #nodePanel.on{display:grid;}
+  #nodePanel .ax{font-family:var(--label); text-transform:uppercase; letter-spacing:.1em;
+                 font-size:10.5px; color:var(--ink-faint);}
+  #nodePanel .amt{font-family:var(--data); font-weight:700; font-size:13px; text-align:center;}
+  #nodePanel .nb{width:34px; height:34px; border-radius:10px; background:rgba(12,17,24,.55);
+                 border:1px solid var(--edge); color:var(--ink); font-family:var(--data); font-size:15px;}
+  #nodePanel .nb:active{background:var(--accent); color:#06121F;}
+  #nodeFoot{grid-column:span 3; display:flex; gap:7px; align-items:center; justify-content:space-between;
+            border-top:1px solid var(--edge); padding-top:9px; margin-top:2px;}
+  #nodeFoot .k{font-family:var(--label); text-transform:uppercase; letter-spacing:.1em;
+               font-size:9.5px; color:var(--ink-faint);}
+  #nodeFoot .v{font-family:var(--data); font-weight:700; font-size:13px;}
+  #nodeFoot button{height:34px; padding:0 11px; border-radius:10px; background:rgba(12,17,24,.55);
+                   border:1px solid var(--edge); color:var(--ink); font-family:var(--label);
+                   text-transform:uppercase; letter-spacing:.08em; font-size:10.5px;}
+
+  /* ---------- assembly building ---------- */
+  #vab{position:absolute; inset:0; display:none;}
+  #vab.on{display:block;}
+  #vabDots{position:absolute; inset:0; pointer-events:none;}
+  .dot{position:absolute; width:34px; height:34px; margin:-17px 0 0 -17px; border-radius:50%;
+       border:2px solid rgba(255,255,255,.9); background:rgba(78,155,230,.35); pointer-events:auto;
+       display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px;
+       font-family:var(--data); line-height:1; transition:transform .1s, background .12s;}
+  .dot:hover{background:rgba(78,155,230,.75);} .dot:active{transform:scale(.88);}
+  .dot.rad{border-style:dashed;}
+  #vabTop{position:absolute; top:calc(12px + env(safe-area-inset-top,0px));
+          left:calc(12px + env(safe-area-inset-left,0px));
+          right:calc(12px + env(safe-area-inset-right,0px));
+          display:flex; align-items:center; gap:10px; pointer-events:none;}
+  #vabTop > *{pointer-events:auto;}
+  #vabName{flex:0 1 190px; min-width:0; background:rgba(31,40,53,.9); border:1px solid var(--edge);
+           border-radius:var(--r); color:var(--ink); font-family:var(--label); font-size:16px;
+           letter-spacing:.03em; padding:0 14px; height:46px;}
+  #vabName:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  #vabStats{display:flex; gap:16px; padding:8px 16px; margin-left:auto;}
+  #vabStats .stat{align-items:center;}
+  #launchBtn{width:58px; height:58px; border-radius:var(--r); background:var(--accent);
+             border:1px solid var(--accent); color:#06121F; display:flex; align-items:center;
+             justify-content:center;}
+  #launchBtn svg{width:26px;height:26px;fill:currentColor;}
+  #launchBtn:disabled{background:rgba(31,40,53,.9); border-color:var(--edge); color:var(--ink-faint);}
+  #vabPalette{position:absolute; right:calc(12px + env(safe-area-inset-right,0px));
+              top:calc(80px + env(safe-area-inset-top,0px));
+              bottom:calc(12px + env(safe-area-inset-bottom,0px)); width:112px;
+              overflow-y:auto; overscroll-behavior:contain; padding:8px; display:grid;
+              grid-template-columns:1fr; gap:7px; align-content:start;}
+  #vabPalette::-webkit-scrollbar{width:0;}
+  .palHead{font-family:var(--label); text-transform:uppercase; letter-spacing:.14em; font-size:10px;
+           color:var(--ink-faint); padding:7px 2px 1px; position:sticky; top:-8px;
+           background:linear-gradient(rgba(31,40,53,.97),rgba(31,40,53,.82)); z-index:1;}
+  .palItem{background:rgba(12,17,24,.5); border:1px solid var(--edge); border-radius:12px;
+           padding:5px 4px 6px; display:flex; flex-direction:column; align-items:center; gap:3px;}
+  .palItem canvas{width:56px; height:48px; display:block;}
+  .palItem span{font-family:var(--label); font-size:9.5px; text-transform:uppercase;
+                letter-spacing:.05em; color:var(--ink-dim); text-align:center; line-height:1.15;}
+  .palItem.sel{border-color:var(--accent); background:rgba(78,155,230,.22);}
+  .palItem:active{transform:scale(.96);}
+  #vabSel{position:absolute; left:calc(12px + env(safe-area-inset-left,0px));
+          bottom:calc(12px + env(safe-area-inset-bottom,0px)); padding:10px 12px;
+          display:none; align-items:center; gap:12px;}
+  #vabSel.on{display:flex;}
+  #vabSel .nm{font-family:var(--label); text-transform:uppercase; letter-spacing:.05em; font-size:14px;}
+  #vabSel .mini{width:40px; height:40px; border-radius:11px; background:rgba(12,17,24,.55);
+                border:1px solid var(--edge); color:var(--ink); display:flex; align-items:center;
+                justify-content:center; font-family:var(--data); font-size:15px;}
+  #vabSel .mini.danger{color:var(--ember);}
+  #vabSym{position:absolute; left:calc(12px + env(safe-area-inset-left,0px));
+          bottom:calc(74px + env(safe-area-inset-bottom,0px)); padding:8px 10px;
+          display:none; align-items:center; gap:8px;}
+  #vabSym.on{display:flex;}
+  #vabSym .k{font-family:var(--label); text-transform:uppercase; letter-spacing:.12em;
+             font-size:10px; color:var(--ink-faint);}
+  #vabSym button{width:34px; height:34px; border-radius:10px; background:rgba(12,17,24,.55);
+                 border:1px solid var(--edge); color:var(--ink-dim); font-family:var(--data);
+                 font-size:14px; font-weight:700;}
+  #vabSym button.on{background:var(--accent); border-color:var(--accent); color:#06121F;}
+  #vabHint{position:absolute; left:50%; transform:translateX(-50%);
+           bottom:calc(16px + env(safe-area-inset-bottom,0px));
+           font-family:var(--label); text-transform:uppercase; letter-spacing:.12em; font-size:11px;
+           color:var(--ink-faint); pointer-events:none;}
+  @media (orientation:landscape) and (max-height:430px){
+    #vabPalette{width:96px;} .palItem canvas{width:48px;height:40px;}
+    #vabStats{gap:11px; padding:6px 11px;} #vabName{flex-basis:140px; height:42px;}
+    #launchBtn{width:50px;height:50px;}
+  }
+
   #rotate{position:absolute; inset:0; display:none; flex-direction:column; align-items:center;
           justify-content:center; gap:14px; background:rgba(8,12,19,.95); text-align:center; padding:24px;}
   #rotate .glyph{font-size:44px; color:var(--accent); animation:tip 2.4s ease-in-out infinite;}
@@ -259,6 +376,7 @@
       <button class="tb" id="viewBtn"><span class="g">&#9635;</span><span id="viewLbl">Chase</span></button>
       <button class="tb" id="chuteBtn"><span class="g">&#9906;</span>Chute</button>
       <button class="tb" data-sas="radialOut"><span class="g">&uarr;</span>Up</button>
+      <button class="tb" data-sas="node"><span class="g">&#10022;</span>Node</button>
       <button class="tb wide" id="quitBtn"><span class="g">&#9211;</span>End flight</button>
     </div>
 
@@ -269,7 +387,75 @@
       <span class="k">Power</span>
     </div>
 
+    <div id="mapUI">
+      <div class="panel" id="mapInfo">
+        <div class="r"><span class="lbl">Apoapsis</span><span class="val" id="mAp">—</span></div>
+        <div class="r"><span class="lbl">T to Ap</span><span class="val" id="mAt">—</span></div>
+        <div class="r"><span class="lbl">Periapsis</span><span class="val" id="mPe">—</span></div>
+        <div class="r"><span class="lbl">T to Pe</span><span class="val" id="mPt">—</span></div>
+        <div class="r"><span class="lbl">Period</span><span class="val" id="mPer">—</span></div>
+        <div class="r"><span class="lbl">Inclination</span><span class="val" id="mInc">—</span></div>
+        <div class="r"><span class="lbl">Speed</span><span class="val" id="mVel">—</span></div>
+        <div id="mapEvent">&mdash;</div>
+      </div>
+      <div class="panel" id="mapFocus">
+        <button data-focus="ship">Ship</button>
+        <button data-focus="terra">Terra</button>
+        <button data-focus="selene">Selene</button>
+      </div>
+      <button id="nodeBtn">Plan burn</button>
+      <div class="panel" id="nodePanel">
+        <span class="ax">Prograde</span><span class="amt" id="nPro">0</span>
+        <span style="display:flex;gap:6px"><button class="nb" data-n="pro-">&minus;</button><button class="nb" data-n="pro+">+</button></span>
+        <span class="ax">Normal</span><span class="amt" id="nNor">0</span>
+        <span style="display:flex;gap:6px"><button class="nb" data-n="nor-">&minus;</button><button class="nb" data-n="nor+">+</button></span>
+        <span class="ax">Radial</span><span class="amt" id="nRad">0</span>
+        <span style="display:flex;gap:6px"><button class="nb" data-n="rad-">&minus;</button><button class="nb" data-n="rad+">+</button></span>
+        <span class="ax">When</span><span class="amt" id="nWhen">—</span>
+        <span style="display:flex;gap:6px"><button class="nb" data-n="t-">&laquo;</button><button class="nb" data-n="t+">&raquo;</button></span>
+        <div id="nodeFoot">
+          <span><span class="k">&Delta;v</span> <span class="v" id="nDv">0</span></span>
+          <span><span class="k">Burn</span> <span class="v" id="nBurn">—</span></span>
+          <button id="nodeWarp">Warp</button>
+          <button id="nodeDel">Clear</button>
+        </div>
+      </div>
+    </div>
+
     <div id="banner"></div>
+  </div>
+
+  <div id="vab">
+    <div id="vabDots"></div>
+    <div id="vabTop">
+      <button class="sq" id="vabBack" style="position:static" aria-label="Back to manifest">
+        <svg viewBox="0 0 24 24"><path d="M18.3 7.1 16.9 5.7 12 10.6 7.1 5.7 5.7 7.1l4.9 4.9-4.9 4.9 1.4 1.4 4.9-4.9 4.9 4.9 1.4-1.4-4.9-4.9z"/></svg>
+      </button>
+      <input id="vabName" maxlength="28" aria-label="Rocket name">
+      <div class="panel" id="vabStats">
+        <div class="stat"><span class="lbl">Total &Delta;v</span><span class="val" id="vDv">0</span></div>
+        <div class="stat"><span class="lbl">Liftoff TWR</span><span class="val" id="vTwr">0.00</span></div>
+        <div class="stat"><span class="lbl">Mass</span><span class="val" id="vMass">0</span></div>
+        <div class="stat"><span class="lbl">Stages</span><span class="val" id="vStages">0</span></div>
+        <div class="stat"><span class="lbl">Height</span><span class="val" id="vHeight">0</span></div>
+      </div>
+      <button id="launchBtn" aria-label="Launch">
+        <svg viewBox="0 0 24 24"><path d="M6.5 4.3v15.4c0 .8.9 1.3 1.6.9l12-7.7c.6-.4.6-1.4 0-1.8l-12-7.7c-.7-.4-1.6.1-1.6.9z"/></svg>
+      </button>
+    </div>
+    <div class="panel" id="vabPalette"></div>
+    <div class="panel" id="vabSym">
+      <span class="k">Symmetry</span>
+      <button data-sym="2">2</button><button data-sym="3">3</button><button data-sym="4">4</button>
+    </div>
+    <div class="panel" id="vabSel">
+      <span class="nm" id="vabSelName">Part</span>
+      <button class="mini" id="vabStageDn" aria-label="Earlier stage">&minus;</button>
+      <span class="val" id="vabStage">1</span>
+      <button class="mini" id="vabStageUp" aria-label="Later stage">+</button>
+      <button class="mini danger" id="vabDel" aria-label="Delete part">&#9003;</button>
+    </div>
+    <div id="vabHint">Pick a part, then tap a highlighted point</div>
   </div>
 
   <div class="sheet" id="menu">
@@ -522,24 +708,59 @@ part("fin-large",    {w:1.5,h:1.6,dry:120,cd:0.14,lift:2.2,style:"fin",tint:0xB7
 part("legs",         {w:0.7,h:1.0,dry:50,cd:0.05,tol:22,style:"legs",tint:0xA8AEB5});
 
 /* ---------- assembly ----------
-   A part sits at height `y` along the rocket's axis, offset `rad` from it at
-   azimuth `az`. Inline parts have rad = 0.                                     */
-class Build{
-  constructor(name,blurb,rootId){ this.name=name; this.blurb=blurb; this.parts=[];
-    const d=P[rootId]; this.parts.push({def:rootId,y:0,rad:0,az:0,radial:false});
-    this.by=-d.h/2; this.ty=d.h/2; }
-  add(id){ const d=P[id], y=this.by-d.h/2;
-    this.parts.push({def:id,y,rad:0,az:0,radial:false}); this.by=y-d.h/2; return this.parts.length-1; }
-  nose(id){ const d=P[id], y=this.ty+d.h/2;
-    this.parts.push({def:id,y,rad:0,az:0,radial:false}); this.ty=y+d.h/2; return this.parts.length-1; }
-  ring(id, hostIdx, cy, count){
-    const d=P[id], hd=P[this.parts[hostIdx].def], rad=hd.w/2+d.w/2;
-    for(let k=0;k<count;k++)
-      this.parts.push({def:id,y:cy,rad,az:k*TAU/count,radial:true});
-    return this;
-  }
-  done(){ autoStage(this); fuelSections(this); return this; }
+   A rocket is an ordered stack of inline parts plus rings of radial ones. Keeping
+   the stack as a list rather than baked coordinates is what makes the assembly
+   building possible: inserting or deleting re-flows everything below it.          */
+function makeCraft(name, blurb, stack, radials){
+  return compileCraft({name, blurb, stack:stack.slice(),
+                       radials:(radials||[]).map(r=>Object.assign({},r))});
 }
+function compileCraft(craft){
+  const parts=[], stackY=[];
+  let cursor=0;
+  craft.stack.forEach((id,k)=>{
+    const d=P[id];
+    cursor-=d.h/2; stackY.push(cursor);
+    parts.push({def:id, y:cursor, rad:0, az:0, radial:false, stackIndex:k});
+    cursor-=d.h/2;
+  });
+  (craft.radials||[]).forEach((r,ri)=>{
+    const hostId=craft.stack[r.host]; if(!hostId) return;
+    const hd=P[hostId], d=P[r.def];
+    const rad=hd.w/2 + d.w/2;
+    const y=stackY[r.host] + (r.off||0)*hd.h;
+    for(let k=0;k<r.count;k++)
+      parts.push({def:r.def, y, rad, az:k*TAU/r.count, radial:true, radialIndex:ri});
+  });
+  craft.parts=parts; craft.stackY=stackY;
+  autoStage(craft); fuelSections(craft);
+  return craft;
+}
+/** Insert into the stack at `at`, keeping radial hosts pointing at the same parts. */
+function stackInsert(craft, at, defId){
+  craft.stack.splice(at,0,defId);
+  for(const r of craft.radials) if(r.host>=at) r.host++;
+  return compileCraft(craft);
+}
+function stackRemove(craft, at){
+  craft.stack.splice(at,1);
+  craft.radials = craft.radials.filter(r=>r.host!==at);
+  for(const r of craft.radials) if(r.host>at) r.host--;
+  return compileCraft(craft);
+}
+function radialAdd(craft, host, defId, count, off){
+  craft.radials.push({def:defId, host, count, off});
+  return compileCraft(craft);
+}
+function radialRemove(craft, ri){
+  craft.radials.splice(ri,1);
+  return compileCraft(craft);
+}
+function cloneCraft(c){
+  return {name:c.name, blurb:c.blurb, stack:c.stack.slice(),
+          radials:c.radials.map(r=>Object.assign({},r))};
+}
+
 function autoStage(craft){
   const staged=craft.parts.map((p,i)=>({p,i}))
     .filter(({p})=>{const d=P[p.def]; return d.tvac>0||d.dec||d.chute;})
@@ -560,6 +781,23 @@ function autoStage(craft){
       if(p.stage===s&&d.tvac>0&&!d.throttleable&&p.radial) doomed.add(i); });
     craft.drops.push(doomed);
   }
+  // Solid boosters light with the first liquid engine; the next stage throws them clear.
+  const liquid=craft.parts.filter(p=>P[p.def].tvac>0&&P[p.def].throttleable).map(p=>p.stage);
+  if(liquid.length){
+    const first=Math.min(...liquid);
+    let changed=false;
+    craft.parts.forEach(p=>{ if(P[p.def].tvac>0&&!P[p.def].throttleable&&p.stage!==first){ p.stage=first; changed=true; } });
+    if(changed){
+      craft.drops=[];
+      for(let s=0;s<craft.stageCount;s++){
+        const doomed=new Set();
+        craft.parts.forEach((p,i)=>{ const d=P[p.def];
+          if(p.stage===s&&d.dec){ doomed.add(i); craft.parts.forEach((q,j)=>{ if(q.y<p.y) doomed.add(j); }); }
+          if(p.stage===s&&d.tvac>0&&!d.throttleable&&p.radial) doomed.add(i); });
+        craft.drops.push(doomed);
+      }
+    }
+  }
 }
 function fuelSections(craft){
   const order=craft.parts.map((p,i)=>({p,i})).filter(({p})=>!p.radial).sort((a,b)=>b.p.y-a.p.y);
@@ -574,27 +812,22 @@ function fuelSections(craft){
   craft.sectionCount=extra;
 }
 
-const CRAFT=[];
-{
-  const a=new Build("Sparrow I","A sub-orbital hop. Enough to learn throttle, staging and parachutes — not enough for orbit.","pod-mk1");
-  a.nose("chute-mk16"); const t=a.add("tank-t400"); a.add("engine-reliant"); a.ring("fin-basic",t,-2.4,4);
-  CRAFT.push(a.done());
-  const b=new Build("Orbiter II","Two stages to orbit, with margin left to come home again.","pod-mk1");
-  b.nose("chute-mk16"); b.add("tank-t400"); b.add("engine-terrier"); b.add("decoupler-125");
-  b.add("tank-t800"); const f=b.add("tank-t400"); b.add("engine-swivel"); b.ring("fin-basic",f,-8.9,4);
-  CRAFT.push(b.done());
-  const c=new Build("Selene Voyager","Solid-assisted lifter, a transfer stage and a lander on legs. Enough to reach the moon and stand on it.","pod-mk1");
-  c.nose("chute-mk16"); const lt=c.add("tank-t400"); c.add("engine-terrier"); c.ring("legs",lt,-2.4,4);
-  c.add("decoupler-125"); c.add("tank-t800"); c.add("engine-terrier"); c.add("adapter"); c.add("decoupler-250");
-  c.add("tank-x200"); c.add("tank-x200"); const core=c.add("tank-x200"); c.add("engine-mainsail");
-  c.ring("fin-large",core,-20,4); c.ring("booster-thumper",core,-16,2);
-  const built=c.done();
-  const first=Math.min(...built.parts.filter(p=>P[p.def].tvac>0&&P[p.def].throttleable).map(p=>p.stage));
-  built.parts.forEach(p=>{ if(P[p.def].tvac>0&&!P[p.def].throttleable) p.stage=first; });
-  autoStage(built); fuelSections(built);
-  built.parts.forEach(p=>{ if(P[p.def].tvac>0&&!P[p.def].throttleable) p.stage=first; });
-  CRAFT.push(built);
-}
+const STOCK=[
+  makeCraft("Sparrow I","A sub-orbital hop. Enough to learn throttle, staging and parachutes — not enough for orbit.",
+    ["chute-mk16","pod-mk1","tank-t400","engine-reliant"],
+    [{def:"fin-basic",host:2,count:4,off:-0.34}]),
+  makeCraft("Orbiter II","Two stages to orbit, with margin left to come home again.",
+    ["chute-mk16","pod-mk1","tank-t400","engine-terrier","decoupler-125","tank-t800","tank-t400","engine-swivel"],
+    [{def:"fin-basic",host:6,count:4,off:-0.18}]),
+  makeCraft("Selene Voyager","Solid-assisted lifter, a transfer stage and a lander on legs. Enough to reach the moon and stand on it.",
+    ["chute-mk16","pod-mk1","tank-t400","engine-terrier","decoupler-125","tank-t800","engine-terrier",
+     "adapter","decoupler-250","tank-x200","tank-x200","tank-x200","engine-mainsail"],
+    [{def:"legs",host:2,count:4,off:-0.40},
+     {def:"fin-large",host:11,count:4,off:-0.34},
+     {def:"booster-thumper",host:10,count:2,off:0}]),
+];
+const CRAFT=STOCK.map(cloneCraft).map(compileCraft);
+
 function craftHeight(c){ let lo=Infinity,hi=-Infinity;
   c.parts.forEach(p=>{const d=P[p.def]; lo=Math.min(lo,p.y-d.h/2); hi=Math.max(hi,p.y+d.h/2);}); return hi-lo; }
 function craftRadius(c){ let r=0;
@@ -930,6 +1163,7 @@ function controlCommand(auth, I){
     target=ref.clone().normalize();
     if(V.sas==="retrograde") target.negate();
   } else if(V.sas==="radialOut") target=V.pos.clone().normalize();
+  else if(V.sas==="node"){ const nd=nodeDirection(); if(nd) target=nd.clone(); }
   if(!target) return V3();
   target.applyQuaternion(_q1.copy(V.quat).invert());       // body frame
   const ax=new THREE.Vector3().crossVectors(NOSE_LOCAL,target);
@@ -1335,65 +1569,73 @@ function stdMat(hex,opts){ const k=hex+"|"+JSON.stringify(opts||{});
   const m=new THREE.MeshStandardMaterial(Object.assign({color:hex,roughness:0.55,metalness:0.22},opts||{}));
   matCache.set(k,m); return m; }
 
+/** Build the meshes for one part, in the rocket's body frame. Shared by flight and
+    the assembly building so a rocket looks identical in both. */
+function makePartNode(p, opts){
+  const d=P[p.def];
+  const node=new THREE.Group();
+  const c=partBodyPos(p);
+  node.position.set(c.x*U, c.y*U, c.z*U);
+  node.rotation.y=-p.az;
+  const w=d.w*U, h=d.h*U;
+  const add=(geo,mat,y)=>{ const m=new THREE.Mesh(geo,mat); if(y) m.position.y=y; node.add(m); return m; };
+  if(d.style==="pod"){
+    add(new THREE.CylinderGeometry(w*0.30,w/2,h,20), stdMat(d.tint));
+    add(new THREE.CylinderGeometry(w/2,w/2,h*0.14,20), stdMat(0x4C433F,{metalness:0.1}), -h/2);
+  } else if(d.style==="engine"){
+    add(new THREE.CylinderGeometry(w*0.34,w*0.34,h*0.35,16), stdMat(d.tint), h*0.32);
+    add(new THREE.CylinderGeometry(w*0.30,w*0.52,h*0.65,20,1,true),
+        stdMat(0x3D3937,{metalness:0.6,roughness:0.4,side:THREE.DoubleSide}), -h*0.17);
+  } else if(d.style==="srb"){
+    add(new THREE.CylinderGeometry(w/2,w/2,h*0.84,20), stdMat(d.tint));
+    add(new THREE.ConeGeometry(w/2,h*0.16,20), stdMat(d.tint), h*0.5);
+    add(new THREE.CylinderGeometry(w*0.34,w*0.42,h*0.10,16), stdMat(0x3D3937), -h*0.47);
+  } else if(d.style==="dec"){
+    add(new THREE.CylinderGeometry(w*0.52,w*0.52,h,20), stdMat(d.tint,{roughness:0.7}));
+  } else if(d.style==="adapter"){
+    add(new THREE.CylinderGeometry(w*0.25,w/2,h,20), stdMat(d.tint));
+  } else if(d.style==="fin"){
+    const geo=new THREE.BufferGeometry();
+    const hw=w, hh=h/2, th=0.06*U, verts=[];
+    const tri=(x,y,z)=>verts.push(...x,...y,...z);
+    const A=[0,hh,0], B=[hw,-hh,0], C=[0,-hh,0];
+    for(const z of [th,-th]) tri([A[0],A[1],z],[B[0],B[1],z],[C[0],C[1],z]);
+    tri([A[0],A[1],th],[C[0],C[1],th],[C[0],C[1],-th]); tri([A[0],A[1],th],[C[0],C[1],-th],[A[0],A[1],-th]);
+    tri([A[0],A[1],th],[B[0],B[1],-th],[B[0],B[1],th]); tri([A[0],A[1],th],[A[0],A[1],-th],[B[0],B[1],-th]);
+    tri([C[0],C[1],th],[B[0],B[1],th],[B[0],B[1],-th]); tri([C[0],C[1],th],[B[0],B[1],-th],[C[0],C[1],-th]);
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(verts,3)); geo.computeVertexNormals();
+    node.add(new THREE.Mesh(geo, stdMat(d.tint,{side:THREE.DoubleSide})));
+  } else if(d.style==="legs"){
+    const leg=new THREE.Mesh(new THREE.CylinderGeometry(w*0.09,w*0.09,h*1.25,8), stdMat(d.tint));
+    leg.rotation.z=-0.5; leg.position.set(w*0.42,-h*0.1,0); node.add(leg);
+    const foot=new THREE.Mesh(new THREE.CylinderGeometry(w*0.24,w*0.24,h*0.07,10), stdMat(d.tint));
+    foot.position.set(w*0.78,-h*0.62,0); node.add(foot);
+  } else if(d.style==="chute"){
+    add(new THREE.CylinderGeometry(w*0.44,w*0.44,h,16), stdMat(d.tint));
+    const canopy=new THREE.Mesh(new THREE.SphereGeometry(1,20,12,0,TAU,0,Math.PI/2),
+      new THREE.MeshStandardMaterial({color:0xE8733F, side:THREE.DoubleSide, roughness:0.9}));
+    canopy.name="canopy"; canopy.visible=false; node.add(canopy);
+  } else {
+    add(new THREE.CylinderGeometry(w/2,w/2,h,20), stdMat(d.tint));
+    node.add(new THREE.Mesh(new THREE.CylinderGeometry(w*0.51,w*0.51,h*0.05,20), stdMat(0x9AA3AD)));
+  }
+  if(d.tvac>0 && opts && opts.plumes){
+    const plume=new THREE.Mesh(new THREE.ConeGeometry(1,1,20,1,true),
+      new THREE.MeshBasicMaterial({map:plumeTexture(!d.throttleable), transparent:true,
+        opacity:0, depthWrite:false, blending:THREE.AdditiveBlending, side:THREE.DoubleSide}));
+    plume.position.y=-h/2; plume.rotation.x=Math.PI;
+    node.add(plume); node.userData.plume=plume;
+  }
+  return node;
+}
+
 function rebuildRocket(){
   while(rocketGroup.children.length) rocketGroup.remove(rocketGroup.children[0]);
   plumeMeshes.clear();
   for(const i of V.live){
-    const p=V.craft.parts[i], d=P[p.def];
-    const node=new THREE.Group();
-    const c=partBodyPos(p);
-    node.position.set(c.x*U, c.y*U, c.z*U);
-    node.rotation.y = -p.az;
-    const w=d.w*U, h=d.h*U;
-    const add=(geo,mat,y)=>{ const m=new THREE.Mesh(geo,mat); if(y) m.position.y=y; node.add(m); return m; };
-    if(d.style==="pod"){
-      add(new THREE.CylinderGeometry(w*0.30,w/2,h,20), stdMat(d.tint));
-      add(new THREE.CylinderGeometry(w/2,w/2,h*0.14,20), stdMat(0x4C433F,{metalness:0.1}), -h/2);
-    } else if(d.style==="engine"){
-      add(new THREE.CylinderGeometry(w*0.34,w*0.34,h*0.35,16), stdMat(d.tint), h*0.32);
-      add(new THREE.CylinderGeometry(w*0.30,w*0.52,h*0.65,20,1,true), stdMat(0x3D3937,{metalness:0.6,roughness:0.4,side:THREE.DoubleSide}), -h*0.17);
-    } else if(d.style==="srb"){
-      add(new THREE.CylinderGeometry(w/2,w/2,h*0.84,20), stdMat(d.tint));
-      add(new THREE.ConeGeometry(w/2,h*0.16,20), stdMat(d.tint), h*0.5);
-      add(new THREE.CylinderGeometry(w*0.34,w*0.42,h*0.10,16), stdMat(0x3D3937), -h*0.47);
-    } else if(d.style==="dec"){
-      add(new THREE.CylinderGeometry(w*0.52,w*0.52,h,20), stdMat(d.tint,{roughness:0.7}));
-    } else if(d.style==="adapter"){
-      add(new THREE.CylinderGeometry(w*0.25,w/2,h,20), stdMat(d.tint));
-    } else if(d.style==="fin"){
-      const geo=new THREE.BufferGeometry();
-      const hw=w, hh=h/2, th=0.06*U;
-      const verts=[]; const tri=(a,b,c)=>verts.push(...a,...b,...c);
-      const A=[0,hh,0], B=[hw,-hh,0], C=[0,-hh,0];
-      for(const z of [th,-th]) tri([A[0],A[1],z],[B[0],B[1],z],[C[0],C[1],z]);
-      tri([A[0],A[1],th],[C[0],C[1],th],[C[0],C[1],-th]); tri([A[0],A[1],th],[C[0],C[1],-th],[A[0],A[1],-th]);
-      tri([A[0],A[1],th],[B[0],B[1],-th],[B[0],B[1],th]); tri([A[0],A[1],th],[A[0],A[1],-th],[B[0],B[1],-th]);
-      tri([C[0],C[1],th],[B[0],B[1],th],[B[0],B[1],-th]); tri([C[0],C[1],th],[B[0],B[1],-th],[C[0],C[1],-th]);
-      geo.setAttribute("position", new THREE.Float32BufferAttribute(verts,3)); geo.computeVertexNormals();
-      const m=new THREE.Mesh(geo, stdMat(d.tint,{side:THREE.DoubleSide})); node.add(m);
-    } else if(d.style==="legs"){
-      const leg=new THREE.Mesh(new THREE.CylinderGeometry(w*0.09,w*0.09,h*1.25,8), stdMat(d.tint));
-      leg.rotation.z=-0.5; leg.position.set(w*0.42,-h*0.1,0); node.add(leg);
-      const foot=new THREE.Mesh(new THREE.CylinderGeometry(w*0.24,w*0.24,h*0.07,10), stdMat(d.tint));
-      foot.position.set(w*0.78,-h*0.62,0); node.add(foot);
-    } else if(d.style==="chute"){
-      add(new THREE.CylinderGeometry(w*0.44,w*0.44,h,16), stdMat(d.tint));
-      const canopy=new THREE.Mesh(new THREE.SphereGeometry(1,20,12,0,TAU,0,Math.PI/2),
-        new THREE.MeshStandardMaterial({color:0xE8733F, side:THREE.DoubleSide, roughness:0.9}));
-      canopy.name="canopy"; canopy.visible=false; node.add(canopy);
-    } else {
-      add(new THREE.CylinderGeometry(w/2,w/2,h,20), stdMat(d.tint));
-      const band=new THREE.Mesh(new THREE.CylinderGeometry(w*0.51,w*0.51,h*0.05,20), stdMat(0x9AA3AD));
-      node.add(band);
-    }
-    if(d.tvac>0){
-      const plume=new THREE.Mesh(new THREE.ConeGeometry(1,1,20,1,true),
-        new THREE.MeshBasicMaterial({map:plumeTexture(!d.throttleable), transparent:true,
-          opacity:0, depthWrite:false, blending:THREE.AdditiveBlending, side:THREE.DoubleSide}));
-      plume.position.y=-h/2; plume.rotation.x=Math.PI;   // point the cone down the stack
-      node.add(plume); plumeMeshes.set(i, plume);
-    }
+    const node=makePartNode(V.craft.parts[i], {plumes:true});
     node.userData.partIndex=i;
+    if(node.userData.plume) plumeMeshes.set(i, node.userData.plume);
     rocketGroup.add(node);
   }
 }
@@ -1406,7 +1648,7 @@ function rebuildRocket(){
    ========================================================================== */
 const $=id=>document.getElementById(id);
 const hud=$("hud"), menu=$("menu"), endcard=$("endcard"), rotateHint=$("rotate");
-let running=false, craftIndex=1, trailWorld=new Float32Array(600*3), trailUsed=0;
+let running=false, craftIndex=1, lastCraft=null, trailWorld=new Float32Array(600*3), trailUsed=0;
 const Z_AXIS=V3(0,0,1);
 const qTilt=new THREE.Quaternion().setFromAxisAngle(V3(1,0,0), Math.PI/2);
 const _qa=new THREE.Quaternion(), _va=V3(), _vb=V3(), _vc=V3();
@@ -1613,61 +1855,347 @@ function updateCamera(){
   camera.lookAt(target);
 }
 
-/* ---------- map ---------- */
+/* ---------- map ----------
+   Patched conics: the trajectory is walked forward through spheres of influence,
+   and each arc is drawn as its own conic. A manoeuvre node splices a delta-v into
+   the state at its time and the whole chain is re-predicted from there.          */
 const MU_=1e-6;                                      // metres -> map units (1 unit = 1000 km)
+let mapFocus="ship", node=null, warpTarget=null;
+let patchLines=[], markMeshes=[], patches=[], nodePatches=[];
+const NODE_STEP=[1,5,25,100];
+
+Orbit3.prototype.timeAtRadius=function(rad, after){
+  if(this.e<1e-9) return null;
+  const c=(this.a*(1-this.e*this.e)/rad - 1)/this.e;
+  if(c<-1||c>1) return null;
+  const nu=Math.acos(clamp(c,-1,1));
+  const out=[this.timeAtNu(nu,after), this.timeAtNu(-nu,after)].filter(x=>x!==null);
+  return out.length?Math.min(...out):null;
+};
+
+/** First time in (t0,t1] that the arc falls inside Selene's sphere of influence. */
+function scanEncounter(o, t0, t1){
+  if(t1<=t0) return null;
+  const reach=o.closed?o.apoapsis:Infinity;
+  if(reach < SELENE.orbitR-SELENE.soi) return null;
+  if(o.periapsis > SELENE.orbitR+SELENE.soi) return null;
+  const N=320, span=t1-t0;
+  let prevInside=null;
+  for(let i=0;i<=N;i++){
+    const t=t0+span*i/N;
+    const inside=o.state(t).pos.distanceTo(moonPos(t))<SELENE.soi;
+    if(i===0){ if(inside) return null; prevInside=false; continue; }
+    if(inside&&!prevInside){
+      let lo=t0+span*(i-1)/N, hi=t;
+      for(let k=0;k<44;k++){ const m=(lo+hi)/2;
+        if(o.state(m).pos.distanceTo(moonPos(m))<SELENE.soi) hi=m; else lo=m; }
+      return hi;
+    }
+    prevInside=inside;
+  }
+  return null;
+}
+
+function predictPatches(body, pos, vel, t0, maxPatches){
+  const out=[]; let b=body, p=pos.clone(), v=vel.clone(), t=t0;
+  const horizon=6*3600*30;
+  for(let n=0;n<(maxPatches||4);n++){
+    const o=new Orbit3(p,v,b.mu,t);
+    let end=t+(o.closed?o.period:horizon), kind="orbit";
+    const atmoTop=b.atmo?b.atmo.h:0;
+    const surf=b.radius+(atmoTop>0?atmoTop:b.terrain);
+    if(o.periapsis<=surf){
+      const hit=o.timeAtRadius(surf, t+1);
+      if(hit!==null&&hit<end){ end=hit; kind=atmoTop>0?"entry":"impact"; }
+    }
+    if(b===SELENE){
+      const ex=o.timeAtRadius(SELENE.soi, t+1);
+      if(ex!==null&&ex<end){ end=ex; kind="escape"; }
+    } else {
+      const enc=scanEncounter(o,t,end);
+      if(enc!==null){ end=enc; kind="encounter"; }
+    }
+    out.push({body:b, orbit:o, t0:t, t1:end, kind});
+    if(kind==="orbit"||kind==="impact"||kind==="entry") break;
+    const st=o.state(end);
+    if(kind==="escape"){ p=st.pos.clone().add(moonPos(end)); v=st.vel.clone().add(moonVel(end)); b=TERRA; }
+    else { p=st.pos.clone().sub(moonPos(end)); v=st.vel.clone().sub(moonVel(end)); b=SELENE; }
+    t=end;
+  }
+  return out;
+}
+
+/** Position of body `from` expressed in `to`'s frame. */
+function bodyOffset(from,to,t){
+  if(from===to) return V3();
+  if(from===SELENE&&to===TERRA) return moonPos(t);
+  if(from===TERRA&&to===SELENE) return moonPos(t).clone().negate();
+  return V3();
+}
+function mapFrameBody(){ return mapFocus==="selene" ? SELENE : mapFocus==="terra" ? TERRA : V.body; }
+function mapOriginVec(){
+  const f=mapFrameBody();
+  return mapFocus==="ship" ? V.pos.clone().add(bodyOffset(V.body,f,V.ut)) : V3();
+}
+
+/** Delta-v of the planned node, in the inertial frame. */
+function nodeDeltaV(){
+  if(!node||!patches.length) return null;
+  const first=patches[0];
+  if(node.t<first.t0||node.t>first.t1+1) return null;
+  const st=first.orbit.state(node.t);
+  const pro=st.vel.clone().normalize();
+  const nor=new THREE.Vector3().crossVectors(st.pos,st.vel).normalize();
+  const rad=st.pos.clone().normalize();
+  return { body:first.body, pos:st.pos, vel:st.vel,
+           dv:pro.multiplyScalar(node.pro).add(nor.multiplyScalar(node.nor)).add(rad.multiplyScalar(node.rad)) };
+}
+function nodeBurnTime(dv){
+  if(dv<=0) return 0;
+  const f=clamp(pressure(V.body,altitude())/101325,0,1);
+  let th=0, flow=0;
+  for(const i of V.ignited){
+    if(!V.live.has(i)||V.flamed.has(i)||availFuel(i)<=0) continue;
+    const d=P[V.craft.parts[i].def];
+    const t=lerp(d.tvac,d.tsl,f);
+    th+=t; flow+=t/(Math.max(lerp(d.ivac,d.isl,f),1)*G0);
+  }
+  if(flow<=0) return Infinity;
+  const isp=th/(flow*G0), m0=totalMass();
+  return (m0 - m0/Math.exp(dv/(isp*G0)))/flow;
+}
+/** World direction the rocket should point to fly the node. */
+function nodeDirection(){
+  const nd=nodeDeltaV();
+  return nd && nd.dv.length()>0.01 ? nd.dv.clone().normalize() : null;
+}
+
+function lineFor(i,colour,dashed){
+  while(patchLines.length<=i){
+    const g=new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(241*3),3));
+    const l=new THREE.Line(g,new THREE.LineBasicMaterial({color:0xFFFFFF}));
+    l.frustumCulled=false; mapScene.add(l); patchLines.push(l);
+  }
+  const l=patchLines[i];
+  l.visible=true; l.material.color.setHex(colour); l.material.opacity=dashed?0.75:1;
+  l.material.transparent=!!dashed;
+  return l;
+}
+function markFor(i,colour,size){
+  while(markMeshes.length<=i){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(1,10,8), new THREE.MeshBasicMaterial({color:0xFFFFFF}));
+    mapScene.add(m); markMeshes.push(m);
+  }
+  const m=markMeshes[i]; m.visible=true; m.material.color.setHex(colour); m.scale.setScalar(size);
+  return m;
+}
+function drawChain(chain, startIndex, colour, dashed, origin, frame, labels){
+  let li=startIndex;
+  for(const pa of chain){
+    const off=bodyOffset(pa.body, frame, pa.t0);
+    const l=lineFor(li++, colour, dashed);
+    const arr=l.geometry.attributes.position;
+    const span=pa.t1-pa.t0;
+    for(let i=0;i<=240;i++){
+      const t=pa.t0+span*i/240;
+      const p=pa.orbit.state(t).pos.add(off).sub(origin);
+      arr.array[i*3]=p.x*MU_; arr.array[i*3+1]=p.y*MU_; arr.array[i*3+2]=p.z*MU_;
+    }
+    arr.needsUpdate=true; l.geometry.computeBoundingSphere();
+    if(labels) labels.push({patch:pa, off, origin});
+  }
+  return li;
+}
+
 function updateMap(){
-  const d=mapScene.userData, b=V.body;
-  d.planet.material.map=planetTextures(b).surf; d.planet.material.needsUpdate=true;
-  d.planet.scale.setScalar(b.radius*MU_);
-  d.planet.quaternion.copy(spinQuat(rotAngle(b,V.ut)));
-  const showMoon=b===TERRA;
-  d.moon.visible=d.soi.visible=d.moonOrbit.visible=showMoon;
-  if(showMoon){
-    const mp=moonPos(V.ut);
-    d.moon.position.copy(mp).multiplyScalar(MU_);
-    d.moon.scale.setScalar(SELENE.radius*MU_);
-    d.moon.material.map=planetTextures(SELENE).surf; d.moon.material.needsUpdate=true;
-    d.soi.position.copy(d.moon.position); d.soi.scale.setScalar(SELENE.soi*MU_);
+  const d=mapScene.userData;
+  const frame=mapFrameBody(), origin=mapOriginVec();
+  const put=(obj,posInFrame)=>obj.position.copy(posInFrame).sub(origin).multiplyScalar(MU_);
+
+  d.planet.material.map=planetTextures(frame).surf; d.planet.material.needsUpdate=true;
+  d.planet.scale.setScalar(frame.radius*MU_);
+  d.planet.quaternion.copy(spinQuat(rotAngle(frame,V.ut)));
+  put(d.planet, V3());
+
+  const other = frame===TERRA?SELENE:TERRA;
+  d.moon.visible=d.soi.visible=true;
+  d.moonOrbit.visible = frame===TERRA;
+  const otherPos=bodyOffset(other, frame, V.ut);
+  put(d.moon, otherPos);
+  d.moon.scale.setScalar(other.radius*MU_);
+  d.moon.material.map=planetTextures(other).surf; d.moon.material.needsUpdate=true;
+  d.moon.quaternion.copy(spinQuat(rotAngle(other,V.ut)));
+  const soiBody = frame===TERRA?other:frame;
+  put(d.soi, frame===TERRA?otherPos:V3());
+  d.soi.scale.setScalar(SELENE.soi*MU_);
+  if(frame===TERRA){
     const mo=d.moonOrbit.geometry.attributes.position;
     for(let i=0;i<=120;i++){ const a=i*TAU/120;
-      mo.array[i*3]=Math.cos(a)*SELENE.orbitR*MU_; mo.array[i*3+1]=Math.sin(a)*SELENE.orbitR*MU_; mo.array[i*3+2]=0; }
-    mo.needsUpdate=true;
+      const p=V3(Math.cos(a)*SELENE.orbitR, Math.sin(a)*SELENE.orbitR, 0).sub(origin);
+      mo.array[i*3]=p.x*MU_; mo.array[i*3+1]=p.y*MU_; mo.array[i*3+2]=p.z*MU_; }
+    mo.needsUpdate=true; d.moonOrbit.geometry.computeBoundingSphere();
   }
-  const o=orbitNow();
-  const op=d.orbit.geometry.attributes.position;
-  const lim=o.closed?Math.PI:Math.acos(clamp(-1/o.e,-1,1))*0.985;
-  for(let i=0;i<=360;i++){
-    const nu=-lim+2*lim*i/360;
-    const p=o.posAtNu(nu);
-    op.array[i*3]=p.x*MU_; op.array[i*3+1]=p.y*MU_; op.array[i*3+2]=p.z*MU_;
+
+  patches = predictPatches(V.body, V.pos, V.vel, V.ut, 4);
+  for(const l of patchLines) l.visible=false;
+  for(const m of markMeshes) m.visible=false;
+  const labels=[];
+  let li=drawChain(patches, 0, 0x5FD3F0, false, origin, frame, labels);
+
+  nodePatches=[];
+  const nd=nodeDeltaV();
+  if(nd && nd.dv.length()>0.05){
+    nodePatches=predictPatches(nd.body, nd.pos, nd.vel.clone().add(nd.dv), node.t, 3);
+    li=drawChain(nodePatches, li, 0xFFB43D, true, origin, frame, null);
   }
-  op.needsUpdate=true; d.orbit.geometry.computeBoundingSphere();
-  d.ship.position.copy(V.pos).multiplyScalar(MU_);
-  d.ship.scale.setScalar(Math.max(mapDist*0.008, b.radius*MU_*0.06));
 
-  const cp=Math.cos(mapPitch);
-  mapCamera.position.set(Math.cos(mapYaw)*cp*mapDist, Math.sin(mapYaw)*cp*mapDist, Math.sin(mapPitch)*mapDist);
-  mapCamera.up.set(0,0,1);
-  mapCamera.lookAt(0,0,0);
+  put(d.ship, V.pos.clone().add(bodyOffset(V.body,frame,V.ut)));
+  d.ship.scale.setScalar(Math.max(mapDist*0.007, frame.radius*MU_*0.05));
 
-  // apsis labels, projected to screen
+  // apsis and event markers
   const box=$("mapLabels"); box.innerHTML="";
-  const label=(worldPos, text, colour)=>{
-    const v=worldPos.clone().multiplyScalar(MU_).project(mapCamera);
+  const label=(posInFrame,text,colour)=>{
+    const v=posInFrame.clone().sub(origin).multiplyScalar(MU_).project(mapCamera);
     if(v.z>1) return;
     const el=document.createElement("div");
     el.className="mapLabel"; el.textContent=text; el.style.color=colour;
     el.style.left=((v.x*0.5+0.5)*100)+"%"; el.style.top=((-v.y*0.5+0.5)*100)+"%";
     box.appendChild(el);
   };
-  if(o.closed) label(o.posAtNu(Math.PI), "Ap "+fmtDist(o.apoapsis-b.radius), "#5FD3F0");
-  const pe=o.periapsis-b.radius;
-  label(o.posAtNu(0), "Pe "+fmtDist(pe), pe<0?"#FF5F4D":"#5FD3F0");
+  let mi=0;
+  const markSize=Math.max(mapDist*0.006, 0.004);
+  for(const L of labels){
+    const pa=L.patch, o=pa.orbit;
+    if(o.closed){
+      const tap=o.timeAtNu(Math.PI, pa.t0);
+      if(tap!==null&&tap<=pa.t1){
+        const p=o.posAtNu(Math.PI).add(L.off);
+        markFor(mi,0x5FD3F0,markSize).position.copy(p).sub(origin).multiplyScalar(MU_); mi++;
+        label(p,"Ap "+fmtDist(o.apoapsis-pa.body.radius),"#5FD3F0");
+      }
+    }
+    const tpe=o.timeAtNu(0, pa.t0);
+    if(tpe!==null&&tpe<=pa.t1){
+      const p=o.posAtNu(0).add(L.off), pe=o.periapsis-pa.body.radius;
+      markFor(mi,pe<0?0xFF5F4D:0x5FD3F0,markSize).position.copy(p).sub(origin).multiplyScalar(MU_); mi++;
+      label(p,"Pe "+fmtDist(pe),pe<0?"#FF5F4D":"#5FD3F0");
+    }
+    if(pa.kind!=="orbit"){
+      const p=o.state(pa.t1).pos.add(L.off);
+      const col = pa.kind==="encounter"?0x56D98E : pa.kind==="escape"?0xFFFFFF : 0xFF5F4D;
+      markFor(mi,col,markSize*1.3).position.copy(p).sub(origin).multiplyScalar(MU_); mi++;
+      const txt = pa.kind==="encounter"?"Selene" : pa.kind==="escape"?"Escape"
+                : pa.kind==="entry"?"Entry":"Impact";
+      label(p,txt,"#"+col.toString(16).padStart(6,"0"));
+    }
+  }
+  if(nd && node){
+    const p=nd.pos.clone().add(bodyOffset(nd.body,frame,node.t));
+    markFor(mi,0xFFB43D,markSize*1.4).position.copy(p).sub(origin).multiplyScalar(MU_); mi++;
+    label(p,"Burn","#FFB43D");
+  }
+
+  const cp=Math.cos(mapPitch);
+  mapCamera.position.set(Math.cos(mapYaw)*cp*mapDist, Math.sin(mapYaw)*cp*mapDist, Math.sin(mapPitch)*mapDist);
+  mapCamera.up.set(0,0,1);
+  mapCamera.lookAt(0,0,0);
+  updateMapPanels();
+}
+
+function updateMapPanels(){
+  const o=orbitNow(), b=V.body;
+  $("mAp").textContent = o.closed ? fmtDist(o.apoapsis-b.radius) : "escape";
+  $("mPe").textContent = fmtDist(o.periapsis-b.radius);
+  const tAp=o.closed?o.timeAtNu(Math.PI,V.ut):null, tPe=o.timeAtNu(0,V.ut);
+  $("mAt").textContent = tAp!==null ? fmtClock(tAp-V.ut) : "—";
+  $("mPt").textContent = tPe!==null ? fmtClock(tPe-V.ut) : "—";
+  $("mPer").textContent = o.closed ? fmtClock(o.period) : "—";
+  $("mInc").textContent = (o.i*DEG).toFixed(2)+"\u00B0";
+  $("mVel").textContent = fmtSpd(V.vel.length());
+  const last=patches[patches.length-1];
+  const ev=$("mapEvent");
+  if(!last||last.kind==="orbit"){ ev.textContent="Stable orbit"; ev.style.color="var(--jade)"; }
+  else{
+    const dt=fmtClock(last.t1-V.ut);
+    const map={encounter:["Selene encounter in "+dt,"var(--jade)"],
+               escape:["Leaves Selene in "+dt,"var(--ink)"],
+               entry:["Atmospheric entry in "+dt,"var(--amber)"],
+               impact:["Impact in "+dt,"var(--ember)"]};
+    const m=map[last.kind]||["—","var(--ink-dim)"];
+    ev.textContent=m[0]; ev.style.color=m[1];
+  }
+  for(const btn of document.querySelectorAll("#mapFocus button"))
+    btn.classList.toggle("on", btn.dataset.focus===mapFocus);
+  const np=$("nodePanel");
+  np.classList.toggle("on", !!node);
+  $("nodeBtn").classList.toggle("on", !!node);
+  $("nodeBtn").textContent = node ? "Burn planned" : "Plan burn";
+  if(node){
+    $("nPro").textContent=node.pro.toFixed(0); $("nNor").textContent=node.nor.toFixed(0);
+    $("nRad").textContent=node.rad.toFixed(0);
+    $("nWhen").textContent=fmtClock(node.t-V.ut);
+    const dv=Math.hypot(node.pro,node.nor,node.rad);
+    $("nDv").textContent=dv.toFixed(0)+" m/s";
+    const bt=nodeBurnTime(dv);
+    $("nBurn").textContent = isFinite(bt) ? fmtClock(bt) : "no engine";
+  }
 }
 function fitMap(){
   const o=orbitNow();
   const span=Math.max(o.closed?o.apoapsis:V.pos.length()*2.5, V.body.radius*2.6);
   mapDist=span*MU_*2.4;
+}
+function makeNode(){
+  const o=orbitNow();
+  const lead=Math.max(90, (o.closed?o.period:1800)*0.25);
+  node={t:V.ut+lead, pro:0, nor:0, rad:0};
+}
+
+/* Press and hold to wind a value up; the step grows the longer you hold, which is
+   the only way to dial in both a 2 m/s trim and a 900 m/s injection on a phone. */
+function holdRepeat(el, fn){
+  let timer=null, held=0;
+  const tick=()=>{ held++; fn(NODE_STEP[Math.min(NODE_STEP.length-1, Math.floor(held/9))]);
+                   timer=setTimeout(tick, held<4?170:60); };
+  const start=e=>{ e.preventDefault(); held=0; fn(NODE_STEP[0]); timer=setTimeout(tick,340); };
+  const stop=()=>{ clearTimeout(timer); timer=null; };
+  el.addEventListener("pointerdown",start);
+  el.addEventListener("pointerup",stop); el.addEventListener("pointercancel",stop);
+  el.addEventListener("pointerleave",stop);
+}
+for(const btn of document.querySelectorAll("#nodePanel .nb")){
+  const key=btn.dataset.n, sign=key.endsWith("-")?-1:1, axis=key.slice(0,3);
+  holdRepeat(btn, step=>{
+    if(!node) return;
+    if(axis==="pro") node.pro+=sign*step;
+    else if(axis==="nor") node.nor+=sign*step;
+    else if(axis==="rad") node.rad+=sign*step;
+    else node.t=Math.max(V.ut+5, node.t+sign*step*10);
+  });
+}
+$("nodeBtn").addEventListener("click",()=>{ if(node) node=null; else makeNode(); });
+$("nodeDel").addEventListener("click",()=>{ node=null; warpTarget=null; if(V.sas==="node") V.sas="off"; });
+$("nodeWarp").addEventListener("click",()=>{
+  if(!node) return;
+  const dv=Math.hypot(node.pro,node.nor,node.rad);
+  const burn=nodeBurnTime(dv);
+  warpTarget = node.t - (isFinite(burn)?burn/2:0) - 6;
+  if(warpTarget<=V.ut){ warpTarget=null; banner("Burn is already due"); }
+});
+for(const btn of document.querySelectorAll("#mapFocus button"))
+  btn.addEventListener("click",()=>{ mapFocus=btn.dataset.focus; fitMap(); });
+
+/** Wind time forward toward a planned burn, easing off as it approaches. */
+function serviceWarpTarget(){
+  if(warpTarget===null) return;
+  const left=warpTarget-V.ut;
+  if(left<=0.5 || V.dead){ setWarp(0); warpTarget=null; return; }
+  let want=0;
+  for(let i=WARPS.length-1;i>=0;i--){
+    if(left > WARPS[i]*4){ want=i; break; }
+  }
+  if(want!==V.warp) setWarp(want);
 }
 
 /* ---------- navball ---------- */
@@ -1780,6 +2308,8 @@ function updateHUD(){
   $("warpLbl").classList.toggle("on", V.warp>0);
   $("viewLbl").textContent = CAM_MODES[camMode];
   $("mapBtn").classList.toggle("on", mapMode);
+  $("mapUI").classList.toggle("on", mapMode);
+  hud.classList.toggle("mapping", mapMode);
   for(const bt of document.querySelectorAll("[data-sas]")) bt.classList.toggle("on", V.sas===bt.dataset.sas);
   $("stickKnob").style.transform=`translate(${(V.ctl.yaw*30).toFixed(1)}px, ${(-V.ctl.pitch*30).toFixed(1)}px)`;
   refreshStageStrip();
@@ -1801,7 +2331,8 @@ $("warpDn").addEventListener("click",()=>setWarp(V.warp-1));
 $("mapBtn").addEventListener("click",()=>{ mapMode=!mapMode; if(mapMode) fitMap(); });
 $("viewBtn").addEventListener("click",()=>{ camMode=(camMode+1)%3; });
 $("quitBtn").addEventListener("click",()=>toMenu());
-$("againBtn").addEventListener("click",()=>{ endcard.hidden=true; startFlight(craftIndex); });
+$("againBtn").addEventListener("click",()=>{ endcard.hidden=true;
+  if(lastCraft) startFlightWith(lastCraft); else startFlight(craftIndex); });
 $("baseBtn").addEventListener("click",()=>{ endcard.hidden=true; toMenu(); });
 $("portraitAnyway").addEventListener("click",()=>rotateHint.classList.remove("armed"));
 
@@ -1862,6 +2393,7 @@ addEventListener("keydown",e=>{
   else if(k==="3") setSAS("radialOut");
   else if(k==="p") deployAllChutes();
   else if(k==="h"){ const t=$("tray"); t.hidden=!t.hidden; }
+  else if(k==="n"){ if(node) node=null; else makeNode(); if(!mapMode){ mapMode=true; fitMap(); } }
   else if(k==="escape") toMenu();
 });
 addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));
@@ -1879,35 +2411,46 @@ function pollKeys(dt){
   if(keys.has("control")) setThrottle(V.throttle-dt*0.6);
 }
 
-// camera / map gestures on the canvas background
+// camera gestures on the canvas: orbit, pinch-zoom, and tap-to-select in the VAB
 (function(){
-  const pts=new Map(); let pinch=0, lastX=0, lastY=0, startDist=0;
+  const pts=new Map(); let pinch=0, lastX=0, lastY=0, startDist=0, downX=0, downY=0, moved=0;
+  const state=()=> vabMode ? "vab" : mapMode ? "map" : "fly";
   glCanvas.addEventListener("pointerdown",e=>{
     pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); glCanvas.setPointerCapture(e.pointerId);
-    lastX=e.clientX; lastY=e.clientY;
-    if(pts.size===2){ pinch=spread(); startDist=mapMode?mapDist:camDist; }
+    lastX=downX=e.clientX; lastY=downY=e.clientY; moved=0;
+    if(pts.size===2){ pinch=spread();
+      startDist = state()==="map" ? mapDist : state()==="vab" ? vabDist : camDist; }
   });
   glCanvas.addEventListener("pointermove",e=>{
     if(!pts.has(e.pointerId)) return;
     pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    const st=state();
     if(pts.size===2&&pinch>0){
       const f=spread()/pinch;
-      if(mapMode) mapDist=clamp(startDist/f,0.35,400);
+      if(st==="map") mapDist=clamp(startDist/f,0.35,400);
+      else if(st==="vab") vabDist=clamp(startDist/f,4,400);
       else camDist=clamp(startDist/f,6,4000);
     } else if(pts.size===1){
       const dx=(e.clientX-lastX)/200, dy=(e.clientY-lastY)/200;
-      if(mapMode){ mapYaw-=dx; mapPitch=clamp(mapPitch+dy,-1.45,1.45); }
+      moved+=Math.abs(e.clientX-lastX)+Math.abs(e.clientY-lastY);
+      if(st==="map"){ mapYaw-=dx; mapPitch=clamp(mapPitch+dy,-1.45,1.45); }
+      else if(st==="vab"){ vabYaw-=dx; vabPitch=clamp(vabPitch+dy,-1.2,1.35); }
       else { camYaw-=dx; camPitch=clamp(camPitch+dy,-1.35,1.35); }
       lastX=e.clientX; lastY=e.clientY;
     }
   });
-  const up=e=>{ pts.delete(e.pointerId); if(pts.size<2) pinch=0; };
+  const up=e=>{
+    if(pts.has(e.pointerId) && pts.size===1 && moved<9 && vabMode) vabPick(downX, downY);
+    pts.delete(e.pointerId); if(pts.size<2) pinch=0;
+  };
   glCanvas.addEventListener("pointerup",up); glCanvas.addEventListener("pointercancel",up);
   function spread(){ const a=[...pts.values()]; return a.length<2?0:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y); }
   glCanvas.addEventListener("wheel",e=>{
     e.preventDefault();
-    const f=Math.exp(-e.deltaY*0.0016);
-    if(mapMode) mapDist=clamp(mapDist/f,0.35,400); else camDist=clamp(camDist/f,6,4000);
+    const f=Math.exp(-e.deltaY*0.0016), st=state();
+    if(st==="map") mapDist=clamp(mapDist/f,0.35,400);
+    else if(st==="vab") vabDist=clamp(vabDist/f,4,400);
+    else camDist=clamp(camDist/f,6,4000);
   },{passive:false});
 })();
 
@@ -1949,30 +2492,56 @@ function drawThumb(c2,craft){
 }
 function buildMenu(){
   const list=$("craftList"); list.innerHTML="";
+
+  const build=document.createElement("button");
+  build.className="card"; build.type="button";
+  build.style.gridTemplateColumns="66px 1fr";
+  const bc=document.createElement("canvas"); bc.width=132; bc.height=200;
+  const bi=document.createElement("div");
+  bi.innerHTML='<h3>Assemble a rocket</h3><p>Open the assembly building and stack one yourself. '+
+               'Parts snap to the joints; fins and boosters ring the stack.</p>';
+  build.appendChild(bc); build.appendChild(bi);
+  build.addEventListener("click",()=>openVAB(STARTER()));
+  list.appendChild(build);
+  drawThumb(bc.getContext("2d"), STARTER());
+
+  const saved=new Set(loadSaved().map(c=>c.name));
   CRAFT.forEach((craft,i)=>{
     const a=analyse(craft);
-    const card=document.createElement("button"); card.className="card"; card.type="button";
+    const card=document.createElement("div"); card.className="card";
     const cn=document.createElement("canvas"); cn.width=132; cn.height=200;
     const info=document.createElement("div");
-    const sp=(l,v,c)=>`<div class="stat"><span class="lbl">${l}</span><span class="val sm"${c?` style="color:${c}"`:""}>${v}</span></div>`;
-    info.innerHTML=`<h3>${craft.name}</h3><p>${craft.blurb}</p><div class="specs">
+    const sp=(l,v,c)=>`<div class="stat"><span class="lbl">${l}</span><span class="val"${c?` style="color:${c}"`:""}>${v}</span></div>`;
+    info.innerHTML=`<h3>${craft.name}</h3><p>${craft.blurb||""}</p><div class="specs">
       ${sp("Total &Delta;v",Math.round(a.total)+" m/s",a.total>=3400?"var(--jade)":"var(--amber)")}
       ${sp("Liftoff TWR",(a.rows[0]?a.rows[0].twr.toFixed(2):"—"),a.rows[0]&&a.rows[0].twr>=1?"var(--jade)":"var(--ember)")}
       ${sp("Mass",fmtMass(a.mass))}
       ${sp("Stages",a.rows.length)}
       ${sp("Height",a.height.toFixed(1)+" m")}</div>`;
+    const row=document.createElement("div");
+    row.style.cssText="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap";
+    const mk=(label,cls,fn)=>{ const b=document.createElement("button");
+      b.className="pill"+(cls?" "+cls:""); b.type="button"; b.textContent=label;
+      b.style.cssText="font-size:11px; padding:9px 15px; min-height:38px";
+      b.addEventListener("click",fn); return b; };
+    row.appendChild(mk("Launch","go",()=>startFlightWith(craft)));
+    row.appendChild(mk("Edit",null,()=>openVAB(craft)));
+    if(saved.has(craft.name)) row.appendChild(mk("Delete",null,()=>deleteSaved(craft.name)));
+    info.appendChild(row);
     card.appendChild(cn); card.appendChild(info);
-    card.addEventListener("click",()=>startFlight(i));
     list.appendChild(card);
     drawThumb(cn.getContext("2d"),craft);
   });
 }
-function startFlight(i){
-  craftIndex=i;
-  launch(CRAFT[i]);
+function startFlight(i){ startFlightWith(CRAFT[i] || CRAFT[0]); }
+function startFlightWith(craft){
+  craftIndex=Math.max(0, CRAFT.indexOf(craft));
+  lastCraft=craft;
+  launch(craft);
   trailAge.fill(99); trailUsed=0; trailIdx=0;
-  mapMode=false; camMode=0;
-  camDist=Math.max(craftHeight(CRAFT[i])*2.4, 18);
+  mapMode=false; camMode=0; vabMode=false; node=null; warpTarget=null; mapFocus="ship";
+  $("vab").classList.remove("on");
+  camDist=Math.max(craftHeight(craft)*2.4, 18);
   camYaw=0.6; camPitch=0.20;
   rebuildWorld(); rebuildRocket(); buildStageStrip();
   $("tray").hidden=true;
@@ -1991,8 +2560,10 @@ function frame(ts){
   requestAnimationFrame(frame);
   const dt=lastTs?Math.min((ts-lastTs)/1000,0.1):1/60;
   lastTs=ts;
+  if(vabMode){ vabFrame(); return; }
   if(!running||!V) return;
   pollKeys(dt);
+  if(mapMode) serviceWarpTarget();
   advance(dt);
   updateScene(dt);
   drawNavball(); updateHUD();
@@ -2010,6 +2581,8 @@ function start(saved){
     return;
   }
   initScene();
+  initVAB();
+  CRAFT.length=0; CRAFT.push(...allCraft());
   buildMenu();
   setTimeout(()=>planetTextures(TERRA),50);      // warm the planet while the menu is up
   if(saved&&saved.ci!=null&&CRAFT[saved.ci]){
@@ -2031,6 +2604,299 @@ function start(saved){
   requestAnimationFrame(resize);
   setTimeout(resize, 320);
 }
+</script>
+
+<script>
+"use strict";
+/* ============================================================================
+   The assembly building. A rocket is an ordered stack, so editing is a list
+   operation and everything below an inserted part re-flows on its own.
+   ========================================================================== */
+let vabMode=false, editCraft=null, pendingDef=null, symCount=4, selection=null;
+let vabScene, vabCamera, vabRocket, vabGrid;
+let vabYaw=0.7, vabPitch=0.18, vabDist=30;
+const dotPool=[];
+const CATS=[["Command",["pod-mk1"]],
+            ["Fuel",["tank-t400","tank-t800","tank-x200"]],
+            ["Engines",["engine-terrier","engine-swivel","engine-reliant","engine-mainsail","booster-thumper"]],
+            ["Structure",["decoupler-125","decoupler-250","adapter"]],
+            ["Aero",["fin-basic","fin-large"]],
+            ["Utility",["chute-mk16","legs"]]];
+const isRadialPart = id => ["fin","legs","srb"].includes(P[id].style);
+
+function initVAB(){
+  vabScene=new THREE.Scene();
+  vabCamera=new THREE.PerspectiveCamera(46,1,1e-4,4000);
+  vabScene.add(new THREE.AmbientLight(0x8FA6C4,0.85));
+  const key=new THREE.DirectionalLight(0xFFFFFF,1.5); key.position.set(4,6,7); vabScene.add(key);
+  const fill=new THREE.DirectionalLight(0x7FA8D8,0.55); fill.position.set(-5,2,-4); vabScene.add(fill);
+  vabGrid=new THREE.GridHelper(0.4,40,0x33506E,0x1E3149);
+  vabGrid.material.transparent=true; vabGrid.material.opacity=0.55;
+  vabScene.add(vabGrid);
+  vabRocket=new THREE.Group(); vabScene.add(vabRocket);
+  buildPalette();
+}
+
+function buildPalette(){
+  const pal=$("vabPalette"); pal.innerHTML="";
+  for(const [title,ids] of CATS){
+    const h=document.createElement("div"); h.className="palHead"; h.textContent=title; pal.appendChild(h);
+    for(const id of ids){
+      const d=P[id];
+      const b=document.createElement("button");
+      b.className="palItem"; b.type="button"; b.dataset.def=id;
+      const cn=document.createElement("canvas"); cn.width=112; cn.height=96;
+      const sp=document.createElement("span"); sp.textContent=d.id.replace(/^(engine|tank|booster|decoupler|fin|chute)-/,"");
+      b.appendChild(cn); b.appendChild(sp);
+      b.addEventListener("click",()=>{
+        pendingDef = pendingDef===id ? null : id;
+        selection=null;
+        refreshPalette(); refreshSel();
+        $("vabHint").textContent = pendingDef
+          ? (isRadialPart(pendingDef) ? "Tap a dashed ring to mount around the stack"
+                                      : "Tap a joint to insert")
+          : "Pick a part, then tap a highlighted point";
+      });
+      pal.appendChild(b);
+      drawPartIcon(cn.getContext("2d"), d);
+    }
+  }
+}
+function refreshPalette(){
+  for(const b of document.querySelectorAll(".palItem")) b.classList.toggle("sel", b.dataset.def===pendingDef);
+  $("vabSym").classList.toggle("on", !!pendingDef && isRadialPart(pendingDef));
+  for(const b of document.querySelectorAll("#vabSym button")) b.classList.toggle("on", +b.dataset.sym===symCount);
+}
+function drawPartIcon(c2,d){
+  const w=c2.canvas.width,h=c2.canvas.height;
+  c2.clearRect(0,0,w,h);
+  const sc=Math.min(w/(d.w*1.7), h/(d.h*1.25));
+  c2.save(); c2.translate(w/2,h/2); c2.scale(sc,-sc);
+  c2.fillStyle="#"+("000000"+d.tint.toString(16)).slice(-6);
+  const W=d.w,H=d.h;
+  if(d.style==="pod"){ c2.beginPath(); c2.moveTo(-W/2,-H/2); c2.lineTo(W/2,-H/2);
+    c2.lineTo(W*0.3,H/2); c2.lineTo(-W*0.3,H/2); c2.closePath(); c2.fill(); }
+  else if(d.style==="engine"){ c2.fillStyle="#565049"; c2.beginPath(); c2.moveTo(-W*0.3,H/2);
+    c2.lineTo(W*0.3,H/2); c2.lineTo(W*0.52,-H/2); c2.lineTo(-W*0.52,-H/2); c2.closePath(); c2.fill(); }
+  else if(d.style==="fin"){ c2.beginPath(); c2.moveTo(-W/2,H/2); c2.lineTo(W/2,-H*0.3);
+    c2.lineTo(W/2,-H/2); c2.lineTo(-W/2,-H/2); c2.closePath(); c2.fill(); }
+  else if(d.style==="srb"){ c2.fillRect(-W/2,-H/2,W,H*0.84);
+    c2.beginPath(); c2.moveTo(-W/2,H*0.34); c2.lineTo(W/2,H*0.34); c2.lineTo(0,H/2); c2.closePath(); c2.fill(); }
+  else if(d.style==="adapter"){ c2.beginPath(); c2.moveTo(-W/2,-H/2); c2.lineTo(W/2,-H/2);
+    c2.lineTo(W*0.25,H/2); c2.lineTo(-W*0.25,H/2); c2.closePath(); c2.fill(); }
+  else if(d.style==="legs"){ c2.strokeStyle=c2.fillStyle; c2.lineWidth=W*0.16;
+    c2.beginPath(); c2.moveTo(0,H/2); c2.lineTo(W*0.6,-H/2); c2.stroke(); }
+  else if(d.style==="chute"){ c2.fillRect(-W/2,-H/2,W,H); }
+  else { c2.fillRect(-W/2,-H/2,W,H); c2.fillStyle="rgba(0,0,0,.22)"; c2.fillRect(-W/2,-H*0.05,W,H*0.05); }
+  c2.restore();
+}
+
+function openVAB(craft){
+  editCraft = compileCraft(cloneCraft(craft));
+  pendingDef=null; selection=null;
+  $("vabName").value = editCraft.name;
+  vabMode=true; running=false;
+  menu.hidden=true; hud.hidden=true; endcard.hidden=true;
+  $("vab").classList.add("on");
+  vabDist = Math.max(craftHeight(editCraft)*2.4, 16);
+  vabYaw=0.7; vabPitch=0.18;
+  vabRebuild(); refreshPalette();
+}
+function closeVAB(){
+  vabMode=false; $("vab").classList.remove("on");
+  clearDots(); buildMenu(); menu.hidden=false;
+}
+function vabRebuild(){
+  compileCraft(editCraft);
+  while(vabRocket.children.length) vabRocket.remove(vabRocket.children[0]);
+  editCraft.parts.forEach((p,i)=>{
+    const n=makePartNode(p,{plumes:false});
+    n.userData.partIndex=i;
+    vabRocket.add(n);
+  });
+  // sit the grid under the rocket's base
+  let lo=0; editCraft.parts.forEach(p=>{ lo=Math.min(lo, p.y-P[p.def].h/2); });
+  vabGrid.position.y=(lo-0.4)*U;
+  const span=Math.max(craftHeight(editCraft)*3.5, 24)*U;
+  vabGrid.scale.setScalar(span/0.4);
+  const a=analyse(editCraft);
+  $("vDv").textContent=Math.round(a.total);
+  $("vDv").style.color=a.total>=3400?"var(--jade)":"var(--amber)";
+  const twr=a.rows[0]?a.rows[0].twr:0;
+  $("vTwr").textContent=twr.toFixed(2);
+  $("vTwr").style.color=twr>=1?"var(--jade)":"var(--ember)";
+  $("vMass").textContent=fmtMass(a.mass);
+  $("vStages").textContent=a.rows.length;
+  $("vHeight").textContent=a.height.toFixed(1)+" m";
+  const flyable = editCraft.stack.some(id=>P[id].torque>0) && a.rows.length>0 && twr>=1;
+  $("launchBtn").disabled=!flyable;
+  refreshSel();
+}
+function refreshSel(){
+  const box=$("vabSel");
+  if(!selection){ box.classList.remove("on"); return; }
+  const p=editCraft.parts[selection];
+  if(!p){ selection=null; box.classList.remove("on"); return; }
+  box.classList.add("on");
+  $("vabSelName").textContent=P[p.def].id.replace(/-/g," ");
+  const staged = P[p.def].tvac>0||P[p.def].dec||P[p.def].chute;
+  $("vabStage").textContent = staged ? (p.stage+1) : "—";
+  $("vabStageUp").disabled=$("vabStageDn").disabled=!staged;
+  $("vabDel").disabled = !p.radial && editCraft.stack.length<=1;
+}
+
+/* --- attach points, projected from 3D and tapped as DOM --- */
+function clearDots(){ for(const d of dotPool) d.hidden=true; }
+function dotAt(i){
+  while(dotPool.length<=i){
+    const d=document.createElement("button");
+    d.className="dot"; d.type="button"; d.hidden=true;
+    $("vabDots").appendChild(d); dotPool.push(d);
+  }
+  return dotPool[i];
+}
+function updateDots(){
+  if(!pendingDef){ clearDots(); return; }
+  const rad=isRadialPart(pendingDef), d=P[pendingDef];
+  const targets=[];
+  if(rad){
+    editCraft.stack.forEach((id,k)=>{
+      if(isRadialPart(id)) return;
+      const hd=P[id];
+      targets.push({kind:"radial", host:k, glyph:"+",
+                    pos:V3((hd.w/2+d.w/2)*U, editCraft.stackY[k]*U, 0)});
+    });
+  } else {
+    // one joint above each stack part, plus one below the last
+    let top = editCraft.stack.length ? editCraft.stackY[0]+P[editCraft.stack[0]].h/2 : 0;
+    targets.push({kind:"insert", at:0, glyph:"+", pos:V3(0, top*U, 0)});
+    editCraft.stack.forEach((id,k)=>{
+      const y=editCraft.stackY[k]-P[id].h/2;
+      targets.push({kind:"insert", at:k+1, glyph:"+", pos:V3(0, y*U, 0)});
+    });
+  }
+  let n=0;
+  for(const t of targets){
+    const v=t.pos.clone().project(vabCamera);
+    if(v.z>1) continue;
+    const el=dotAt(n++);
+    el.hidden=false;
+    el.className="dot"+(t.kind==="radial"?" rad":"");
+    el.textContent=t.glyph;
+    el.style.left=((v.x*0.5+0.5)*100)+"%";
+    el.style.top=((-v.y*0.5+0.5)*100)+"%";
+    el.onclick=(ev)=>{
+      ev.stopPropagation();
+      if(t.kind==="radial") radialAdd(editCraft, t.host, pendingDef, symCount, 0);
+      else stackInsert(editCraft, t.at, pendingDef);
+      pendingDef=null; refreshPalette();
+      $("vabHint").textContent="Pick a part, then tap a highlighted point";
+      vabRebuild();
+    };
+  }
+  for(let i=n;i<dotPool.length;i++) dotPool[i].hidden=true;
+}
+
+function vabPick(clientX, clientY){
+  const r=glCanvas.getBoundingClientRect();
+  const nx=((clientX-r.left)/r.width)*2-1, ny=-((clientY-r.top)/r.height)*2+1;
+  const ray=new THREE.Raycaster();
+  ray.setFromCamera({x:nx,y:ny}, vabCamera);
+  const hits=ray.intersectObjects(vabRocket.children, true);
+  if(!hits.length){ selection=null; refreshSel(); return; }
+  let o=hits[0].object;
+  while(o && o.userData.partIndex===undefined) o=o.parent;
+  selection = o ? o.userData.partIndex : null;
+  pendingDef=null; refreshPalette(); refreshSel();
+}
+
+function vabFrame(){
+  const cp=Math.cos(vabPitch);
+  const centre=V3(0, (editCraft ? -craftHeight(editCraft)*0.12 : 0)*U, 0);
+  vabCamera.position.set(Math.cos(vabYaw)*cp*vabDist*U, Math.sin(vabPitch)*vabDist*U + centre.y,
+                         Math.sin(vabYaw)*cp*vabDist*U);
+  vabCamera.up.set(0,1,0);
+  vabCamera.lookAt(centre);
+  updateDots();
+  renderer.render(vabScene, vabCamera);
+}
+
+/* --- wiring --- */
+$("vabBack").addEventListener("click",()=>closeVAB());
+$("vabName").addEventListener("input",e=>{ if(editCraft) editCraft.name=e.target.value.slice(0,28)||"Untitled"; });
+for(const b of document.querySelectorAll("#vabSym button"))
+  b.addEventListener("click",()=>{ symCount=+b.dataset.sym; refreshPalette(); });
+$("vabDel").addEventListener("click",()=>{
+  if(selection===null) return;
+  const p=editCraft.parts[selection];
+  if(p.radial) radialRemove(editCraft, p.radialIndex);
+  else if(editCraft.stack.length>1) stackRemove(editCraft, p.stackIndex);
+  selection=null; vabRebuild();
+});
+$("vabStageUp").addEventListener("click",()=>nudgeStage(1));
+$("vabStageDn").addEventListener("click",()=>nudgeStage(-1));
+function nudgeStage(dir){
+  if(selection===null) return;
+  const p=editCraft.parts[selection];
+  p.stage=clamp(p.stage+dir, 0, editCraft.stageCount-1);
+  // rebuild the drop sets for the hand-edited staging
+  editCraft.drops=[];
+  for(let s=0;s<editCraft.stageCount;s++){
+    const doomed=new Set();
+    editCraft.parts.forEach((q,i)=>{ const d=P[q.def];
+      if(q.stage===s&&d.dec){ doomed.add(i); editCraft.parts.forEach((r,j)=>{ if(r.y<q.y) doomed.add(j); }); }
+      if(q.stage===s&&d.tvac>0&&!d.throttleable&&q.radial) doomed.add(i); });
+    editCraft.drops.push(doomed);
+  }
+  refreshSel();
+}
+$("launchBtn").addEventListener("click",()=>{
+  saveEdit();
+  const c=compileCraft(cloneCraft(editCraft));
+  vabMode=false; $("vab").classList.remove("on"); clearDots();
+  CRAFT.length=0; CRAFT.push(...allCraft());
+  startFlightWith(c);
+});
+
+/* --- saved craft --- */
+function loadSaved(){
+  try{ const v=JSON.parse(localStorage.getItem("lsp3d.craft")||"[]");
+       return Array.isArray(v)?v:[]; }catch(e){ return []; }
+}
+function writeSaved(list){
+  try{ localStorage.setItem("lsp3d.craft", JSON.stringify(list)); }catch(e){}
+}
+function saveEdit(){
+  if(!editCraft) return;
+  const list=loadSaved();
+  const entry={name:editCraft.name||"Untitled", blurb:"Built in the assembly building.",
+               stack:editCraft.stack.slice(), radials:editCraft.radials.map(r=>Object.assign({},r))};
+  const at=list.findIndex(c=>c.name===entry.name);
+  if(at>=0) list[at]=entry; else list.push(entry);
+  writeSaved(list.slice(-24));
+}
+function allCraft(){
+  const out=STOCK.map(cloneCraft).map(compileCraft);
+  for(const c of loadSaved()){
+    try{
+      if(!Array.isArray(c.stack)||!c.stack.every(id=>P[id])) continue;
+      out.push(makeCraft(c.name, c.blurb||"Built in the assembly building.", c.stack,
+               (c.radials||[]).filter(r=>P[r.def])));
+    }catch(e){}
+  }
+  return out;
+}
+function deleteSaved(name){
+  writeSaved(loadSaved().filter(c=>c.name!==name));
+  CRAFT.length=0; CRAFT.push(...allCraft());
+  buildMenu();
+}
+const STARTER=()=>makeCraft("New Rocket","", ["chute-mk16","pod-mk1","tank-t400","engine-reliant"],
+                            [{def:"fin-basic",host:2,count:4,off:-0.34}]);
+</script>
+
+<script>
+"use strict";
 try{
   window.claude?.hot?.snapshot?.(()=> running&&V&&!V.dead ? {
     ci:craftIndex, p:[V.pos.x,V.pos.y,V.pos.z], v:[V.vel.x,V.vel.y,V.vel.z],
