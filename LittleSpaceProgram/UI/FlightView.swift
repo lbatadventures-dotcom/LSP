@@ -42,7 +42,11 @@ struct FlightView: View {
         .persistentSystemOverlays(.hidden)
         .onAppear {
             scene.model = model
+            scene.visuals = app.visualSettings
             throttle = model.simulator.vessel.throttle
+        }
+        .onChange(of: app.visualSettings) { _, settings in
+            scene.visuals = settings
         }
         .onChange(of: scenePhase) { _, phase in
             model.setPaused(phase != .active)

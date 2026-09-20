@@ -2,7 +2,7 @@ import SpriteKit
 import SwiftUI
 import UIKit
 
-/// The world view during flight.
+/// The world view during flight, with the visual mod stack layered on top.
 ///
 /// Everything is drawn with the vessel pinned at the centre of the screen — a floating
 /// origin. Planets are hundreds of kilometres across, and feeding coordinates that large
@@ -12,24 +12,38 @@ final class FlightScene: SKScene {
 
     weak var model: FlightModel? = nil
 
+    /// Which visual mods are switched on. Changing it rebuilds what needs rebuilding.
+    var visuals: VisualSettings = .default {
+        didSet {
+            guard visuals != oldValue else { return }
+            if visuals.starCount != oldValue.starCount { buildStars() }
+            rebuildPlumes = true
+        }
+    }
+
     /// Zoom, in screen points per metre.
     private(set) var pointsPerMeter: Double = 6
     private let minZoom: Double = 0.00004
     private let maxZoom: Double = 60
 
-    private let skyNode = SKSpriteNode()
+    // Layers, back to front.
+    private let sky = SkyGradientNode()
     private let starLayer = SKNode()
+    private let distantObjects = DistantObjectsNode()
+    private let horizonGlow = SKSpriteNode()
+    private let planetNode = PlanetNode()
     private let terrainNode = SKShapeNode()
-    private let planetNode = SKShapeNode()
-    private let atmosphereNode = SKShapeNode()
+    private let cloudBand = CloudBandNode()
+    private let reentry = ReentryNode()
     private let vesselNode = SKNode()
-    private let effectsNode = SKNode()
 
     private var partNodes: [UUID: SKNode] = [:]
-    private var exhaustNodes: [UUID: SKEmitterNode] = [:]
+    private var plumes: [UUID: PlumeNode] = [:]
     private var builtPartSignature: Int = -1
+    private var rebuildPlumes = false
     private var lastUpdate: TimeInterval = 0
-    private var particleTexture: SKTexture? = nil
+    /// Slow drift of the cloud sheet relative to the ground.
+    private var cloudPhase: Double = 0
 
     // MARK: - Setup
 
@@ -38,38 +52,42 @@ final class FlightScene: SKScene {
         scaleMode = .resizeFill
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
 
-        skyNode.zPosition = -100
-        skyNode.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        addChild(skyNode)
+        sky.zPosition = -100
+        addChild(sky)
 
-        starLayer.zPosition = -90
+        starLayer.zPosition = -95
         addChild(starLayer)
         buildStars()
 
-        atmosphereNode.zPosition = -50
-        atmosphereNode.lineWidth = 0
-        addChild(atmosphereNode)
+        distantObjects.zPosition = -90
+        addChild(distantObjects)
 
-        planetNode.zPosition = -40
-        planetNode.lineWidth = 0
+        horizonGlow.texture = ProceduralTexture.glow
+        horizonGlow.blendMode = .add
+        horizonGlow.zPosition = -80
+        horizonGlow.isHidden = true
+        addChild(horizonGlow)
+
+        planetNode.zPosition = -60
         addChild(planetNode)
 
-        terrainNode.zPosition = -30
+        terrainNode.zPosition = -50
         terrainNode.lineWidth = 0
         addChild(terrainNode)
 
-        effectsNode.zPosition = 5
-        addChild(effectsNode)
+        cloudBand.zPosition = -25
+        addChild(cloudBand)
+
+        reentry.zPosition = 8
+        addChild(reentry)
 
         vesselNode.zPosition = 10
         addChild(vesselNode)
 
-        particleTexture = FlightScene.makeParticleTexture()
         if let model { fitZoom(to: model) }
     }
 
     override func didChangeSize(_ oldSize: CGSize) {
-        skyNode.size = size
         buildStars()
     }
 
@@ -95,32 +113,25 @@ final class FlightScene: SKScene {
             seed = seed &* 6364136223846793005 &+ 1442695040888963407
             return Double((seed >> 33) % 100_000) / 100_000
         }
-        let count = 220
-        for _ in 0..<count {
-            let star = SKSpriteNode(color: .white, size: CGSize(width: 2, height: 2))
+        for _ in 0..<visuals.starCount {
+            let star = SKSpriteNode(texture: ProceduralTexture.particle)
+            star.size = CGSize(width: 3, height: 3)
             star.position = CGPoint(x: (random() - 0.5) * size.width * 1.6,
                                     y: (random() - 0.5) * size.height * 1.6)
-            let brightness = 0.25 + random() * 0.75
-            star.alpha = brightness
-            star.setScale(0.6 + random() * 1.1)
+            let brightness = random()
+            star.alpha = CGFloat(0.25 + brightness * 0.75)
+            star.setScale(CGFloat(0.5 + brightness * 1.2))
+            // A few warm and cool stars stop the field reading as grey noise.
+            let hue = random()
+            if hue > 0.86 {
+                star.color = SKColor(red: 1.0, green: 0.82, blue: 0.68, alpha: 1)
+                star.colorBlendFactor = 0.7
+            } else if hue < 0.14 {
+                star.color = SKColor(red: 0.74, green: 0.84, blue: 1.0, alpha: 1)
+                star.colorBlendFactor = 0.7
+            }
             starLayer.addChild(star)
         }
-    }
-
-    private static func makeParticleTexture() -> SKTexture {
-        let side = 32
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: side, height: side))
-        let image = renderer.image { ctx in
-            let colors = [UIColor.white.cgColor,
-                          UIColor.white.withAlphaComponent(0.0).cgColor] as CFArray
-            guard let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                                            colors: colors, locations: [0, 1]) else { return }
-            let center = CGPoint(x: side / 2, y: side / 2)
-            ctx.cgContext.drawRadialGradient(gradient, startCenter: center, startRadius: 0,
-                                             endCenter: center, endRadius: CGFloat(side) / 2,
-                                             options: [])
-        }
-        return SKTexture(image: image)
     }
 
     // MARK: - Frame
@@ -133,30 +144,65 @@ final class FlightScene: SKScene {
         model.advance(realDelta: delta)
 
         let vessel = model.simulator.vessel
+        // The cloud sheet drifts slowly against the ground, scaled by time warp so it
+        // still moves visibly when the mission is running fast.
+        cloudPhase += delta * 1.4e-5 * max(1, model.simulator.warpFactor)
+
         rebuildVesselIfNeeded(vessel)
         updateSky(vessel)
         updateWorld(vessel)
         updateVessel(vessel)
-        updateExhaust(vessel)
+        updatePlumes(vessel)
+        updateReentry(vessel)
     }
 
-    // MARK: - Sky
+    // MARK: - Sky and scattering
 
     private func updateSky(_ vessel: Vessel) {
-        skyNode.size = size
-        let body = vessel.body
-        guard let atmo = body.atmosphere else {
-            skyNode.color = SKColor(red: 0.02, green: 0.025, blue: 0.055, alpha: 1)
-            starLayer.alpha = 1
-            return
+        let system = SolarSystem.shared
+        let sunElevation = system.sunElevation(at: vessel.position)
+        let sample = Scattering.sample(body: vessel.body,
+                                       altitude: vessel.altitude,
+                                       sunElevation: sunElevation)
+
+        if visuals.cloudsAndScattering {
+            sky.update(top: sample.zenith, bottom: sample.horizon, size: size)
+        } else {
+            // Without Scatterer, fall back to the flat two-colour sky.
+            let f = vessel.body.atmosphere?.spaceFraction(atAltitude: vessel.altitude) ?? 1
+            let flat = FlightScene.blend(SKColor(red: 0.33, green: 0.58, blue: 0.92, alpha: 1),
+                                         SKColor(red: 0.02, green: 0.03, blue: 0.07, alpha: 1),
+                                         CGFloat(pow(f, 0.6)))
+            sky.update(top: flat, bottom: flat, size: size)
         }
-        // Blue near the ground, fading to black at the top of the atmosphere.
-        let f = atmo.spaceFraction(atAltitude: vessel.altitude)
-        let eased = pow(f, 0.6)
-        let day = SKColor(red: 0.33, green: 0.58, blue: 0.92, alpha: 1)
-        let space = SKColor(red: 0.02, green: 0.03, blue: 0.07, alpha: 1)
-        skyNode.color = FlightScene.blend(day, space, CGFloat(eased))
-        starLayer.alpha = CGFloat(MathUtil.remap(f, 0.25, 0.75, 0, 1))
+
+        distantObjects.update(system: system, vessel: vessel,
+                              time: vessel.universeTime,
+                              pointsPerMeter: pointsPerMeter,
+                              viewSize: size, settings: visuals)
+
+        starLayer.alpha = CGFloat(MathUtil.clamp(
+            sample.starVisibility * (1 - distantObjects.skyDimming), 0, 1))
+
+        // Scatterer's sunset band, sitting on the horizon and leaning toward the sun.
+        let glowAlpha = visuals.cloudsAndScattering
+            ? CGFloat(sample.horizonGlow.cgColor.alpha) : 0
+        horizonGlow.isHidden = glowAlpha < 0.01
+        if !horizonGlow.isHidden {
+            let up = vessel.position.normalized
+            let east = up.perpendicular
+            let sunEast = system.sunDirection.dot(east)
+            // The horizon sits one altitude below the vessel on screen.
+            let horizonY = -vessel.altitude * pointsPerMeter
+            horizonGlow.position = CGPoint(
+                x: CGFloat(sunEast) * size.width * 0.34,
+                y: CGFloat(MathUtil.clamp(horizonY, Double(-size.height), Double(size.height) * 0.1))
+            )
+            horizonGlow.size = CGSize(width: size.width * 2.2, height: size.height * 0.85)
+            horizonGlow.color = sample.horizonGlow
+            horizonGlow.colorBlendFactor = 1
+            horizonGlow.alpha = glowAlpha
+        }
     }
 
     private static func blend(_ a: SKColor, _ b: SKColor, _ t: CGFloat) -> SKColor {
@@ -173,17 +219,17 @@ final class FlightScene: SKScene {
 
     private func updateWorld(_ vessel: Vessel) {
         let body = vessel.body
+        let system = SolarSystem.shared
         let scale = pointsPerMeter
         let altitude = vessel.altitude
 
         // Close to the surface, draw only the visible slice of ground as a polygon.
-        // Far away, the whole body fits on screen as a circle.
+        // Far away, the whole body fits on screen as a textured disc.
         let halfWidthMeters = Double(size.width) / 2 / scale
         let useSurfaceView = altitude < body.radius * 0.6 && halfWidthMeters < body.radius * 0.5
 
         terrainNode.isHidden = !useSurfaceView
         planetNode.isHidden = useSurfaceView
-        atmosphereNode.isHidden = useSurfaceView || body.atmosphere == nil
 
         if useSurfaceView {
             let path = CGMutablePath()
@@ -206,27 +252,49 @@ final class FlightScene: SKScene {
             path.addLine(to: toScene(left - vessel.position, scale: scale))
             path.closeSubpath()
             terrainNode.path = path
-            terrainNode.fillColor = SKColor(body.surfaceColor)
+
+            // Ground lighting: full colour at noon, deep blue at night, warm at dusk.
+            let sunElevation = system.sunElevation(at: vessel.position)
+            terrainNode.fillColor = groundColor(for: body, sunElevation: sunElevation)
             terrainNode.strokeColor = SKColor(body.deepColor)
             terrainNode.lineWidth = 2
         } else {
-            let radiusPoints = CGFloat(body.radius * scale)
-            let center = toScene(-vessel.position, scale: scale)
-            planetNode.path = CGPath(ellipseIn: CGRect(x: -radiusPoints, y: -radiusPoints,
-                                                       width: radiusPoints * 2,
-                                                       height: radiusPoints * 2), transform: nil)
-            planetNode.position = center
-            planetNode.fillColor = SKColor(body.surfaceColor)
-
-            if let atmo = body.atmosphere {
-                let outer = CGFloat((body.radius + atmo.height) * scale)
-                atmosphereNode.path = CGPath(ellipseIn: CGRect(x: -outer, y: -outer,
-                                                               width: outer * 2, height: outer * 2),
-                                             transform: nil)
-                atmosphereNode.position = center
-                atmosphereNode.fillColor = SKColor(body.atmosphereColor).withAlphaComponent(0.22)
-            }
+            planetNode.position = toScene(-vessel.position, scale: scale)
+            planetNode.update(body: body,
+                              radiusPoints: body.radius * scale,
+                              bodyRotation: body.rotationAngle(at: vessel.universeTime),
+                              sunDirection: system.sunDirection,
+                              cloudPhase: cloudPhase,
+                              settings: visuals)
         }
+
+        cloudBand.isHidden = !useSurfaceView
+        if useSurfaceView {
+            cloudBand.update(body: body,
+                             vesselPosition: vessel.position,
+                             pointsPerMeter: scale,
+                             viewSize: size,
+                             bodyRotation: body.rotationAngle(at: vessel.universeTime),
+                             sunElevation: system.sunElevation(at: vessel.position),
+                             settings: visuals)
+        }
+    }
+
+    private func groundColor(for body: CelestialBody, sunElevation: Double) -> SKColor {
+        let base = SKColor(body.surfaceColor)
+        guard visuals.cloudsAndScattering else { return base }
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        _ = base.getRed(&r, green: &g, blue: &b, alpha: &a)
+
+        let day = CGFloat(MathUtil.clamp(MathUtil.remap(sunElevation, -0.22, 0.20, 0, 1), 0, 1))
+        let golden = CGFloat(pow(max(0, 1 - abs(sunElevation) / 0.34), 1.6))
+        // Night: dark and blue. Dusk: warm. Day: as authored.
+        let night = SKColor(red: r * 0.16, green: g * 0.18, blue: b * 0.30 + 0.03, alpha: 1)
+        let lit = FlightScene.blend(SKColor(red: r, green: g, blue: b, alpha: 1),
+                                    SKColor(red: min(1, r * 1.25 + 0.18),
+                                            green: g * 0.92, blue: b * 0.68, alpha: 1),
+                                    golden * 0.7)
+        return FlightScene.blend(night, lit, day)
     }
 
     private func toScene(_ offsetMeters: Vec2, scale: Double) -> CGPoint {
@@ -247,12 +315,13 @@ final class FlightScene: SKScene {
 
     private func rebuildVesselIfNeeded(_ vessel: Vessel) {
         let signature = partSignature(vessel)
-        guard signature != builtPartSignature else { return }
+        guard signature != builtPartSignature || rebuildPlumes else { return }
         builtPartSignature = signature
+        rebuildPlumes = false
 
         vesselNode.removeAllChildren()
         partNodes.removeAll()
-        exhaustNodes.removeAll()
+        plumes.removeAll()
 
         for part in vessel.liveParts {
             guard let def = part.definition else { continue }
@@ -274,13 +343,15 @@ final class FlightScene: SKScene {
             vesselNode.addChild(node)
             partNodes[part.id] = node
 
-            if def.isEngine, let texture = particleTexture {
-                let emitter = FlightScene.makeExhaust(texture: texture, def: def)
-                emitter.position = CGPoint(x: part.position.x,
-                                           y: part.position.y - def.size.y / 2)
-                emitter.particleBirthRate = 0
-                vesselNode.addChild(emitter)
-                exhaustNodes[part.id] = emitter
+            if def.isEngine {
+                let plume = PlumeNode()
+                plume.configure(definition: def)
+                plume.position = CGPoint(x: part.position.x,
+                                         y: part.position.y - def.size.y / 2)
+                if part.side < 0 { plume.xScale = -1 }
+                plume.zPosition = -1
+                vesselNode.addChild(plume)
+                plumes[part.id] = plume
             }
         }
     }
@@ -291,7 +362,7 @@ final class FlightScene: SKScene {
         vesselNode.zRotation = CGFloat(vessel.heading - .pi / 2)
         vesselNode.alpha = vessel.situation == .destroyed ? 0.35 : 1
 
-        // Keep propellant levels and open canopies in sync without rebuilding nodes.
+        // Keep propellant levels in sync without rebuilding nodes.
         for part in vessel.liveParts {
             guard let def = part.definition, let node = partNodes[part.id] else { continue }
             if def.isTank || def.isSolidBooster {
@@ -306,47 +377,27 @@ final class FlightScene: SKScene {
         }
     }
 
-    private func updateExhaust(_ vessel: Vessel) {
+    private func updatePlumes(_ vessel: Vessel) {
         let pressure = vessel.atmosphericPressure
         for part in vessel.liveParts {
             guard let def = part.definition, def.isEngine,
-                  let emitter = exhaustNodes[part.id] else { continue }
+                  let plume = plumes[part.id] else { continue }
             let runtime = vessel.runtime[part.id]
             let lit = (runtime?.ignited ?? false)
                 && !(runtime?.flamedOut ?? false)
                 && vessel.availableFuel(for: part) > 0
             let level = def.throttleable ? vessel.throttle : 1
-            let intensity = lit ? level : 0
-            emitter.particleBirthRate = CGFloat(420 * intensity)
-            // A vacuum plume spreads; at sea level it stays tight.
-            let spread = MathUtil.remap(pressure, 0, 101_325, 0.55, 0.12)
-            emitter.emissionAngleRange = CGFloat(spread)
-            emitter.particleSpeed = CGFloat(def.size.y * 9 * (0.6 + intensity))
-            emitter.particleLifetime = CGFloat(0.22 + 0.25 * (1 - pressure / 101_325))
+            plume.update(intensity: lit ? level : 0, pressure: pressure, settings: visuals)
         }
     }
 
-    private static func makeExhaust(texture: SKTexture, def: PartDefinition) -> SKEmitterNode {
-        let e = SKEmitterNode()
-        e.particleTexture = texture
-        e.particleBirthRate = 0
-        e.particleLifetime = 0.3
-        e.particleLifetimeRange = 0.12
-        e.emissionAngle = -.pi / 2
-        e.emissionAngleRange = 0.2
-        e.particleSpeed = CGFloat(def.size.y * 10)
-        e.particleSpeedRange = CGFloat(def.size.y * 3)
-        e.particleAlpha = 0.85
-        e.particleAlphaSpeed = -2.4
-        e.particleScale = CGFloat(def.size.x * 0.5)
-        e.particleScaleRange = CGFloat(def.size.x * 0.2)
-        e.particleScaleSpeed = CGFloat(def.size.x * 0.6)
-        e.particleColor = def.isSolidBooster
-            ? SKColor(red: 1.0, green: 0.78, blue: 0.45, alpha: 1)
-            : SKColor(red: 0.72, green: 0.85, blue: 1.0, alpha: 1)
-        e.particleColorBlendFactor = 1
-        e.particleBlendMode = .add
-        e.zPosition = -1
-        return e
+    private func updateReentry(_ vessel: Vessel) {
+        let airVelocity = vessel.surfaceVelocity
+        let sizePoints = max(vessel.design.height, 1) * pointsPerMeter * 0.5
+        reentry.update(density: vessel.atmosphericDensity,
+                       airspeed: airVelocity.length,
+                       travelAngle: airVelocity.length > 1 ? airVelocity.angle : vessel.heading,
+                       vesselSizePoints: sizePoints,
+                       settings: visuals)
     }
 }

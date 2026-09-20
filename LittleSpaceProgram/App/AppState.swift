@@ -23,6 +23,20 @@ final class AppState: ObservableObject {
     @Published var leftHanded: Bool { didSet { Defaults.set(leftHanded, .leftHanded) } }
     @Published var reduceEffects: Bool { didSet { Defaults.set(reduceEffects, .reduceEffects) } }
 
+    // The visual mod stack, switchable the way the originals are in a KSP install.
+    @Published var modCloudsAndScattering: Bool { didSet { Defaults.set(modCloudsAndScattering, .modClouds) } }
+    @Published var modVolumetricPlumes: Bool { didSet { Defaults.set(modVolumetricPlumes, .modPlumes) } }
+    @Published var modReentryEffects: Bool { didSet { Defaults.set(modReentryEffects, .modReentry) } }
+    @Published var modDistantObjects: Bool { didSet { Defaults.set(modDistantObjects, .modDistant) } }
+
+    var visualSettings: VisualSettings {
+        VisualSettings(cloudsAndScattering: modCloudsAndScattering,
+                       volumetricPlumes: modVolumetricPlumes,
+                       reentryEffects: modReentryEffects,
+                       distantObjects: modDistantObjects,
+                       reduceEffects: reduceEffects)
+    }
+
     private let store = SaveStore.shared
 
     init() {
@@ -32,6 +46,10 @@ final class AppState: ObservableObject {
         controlSensitivity = Defaults.double(.sensitivity, default: 1.0)
         leftHanded = Defaults.bool(.leftHanded, default: false)
         reduceEffects = Defaults.bool(.reduceEffects, default: false)
+        modCloudsAndScattering = Defaults.bool(.modClouds, default: true)
+        modVolumetricPlumes = Defaults.bool(.modPlumes, default: true)
+        modReentryEffects = Defaults.bool(.modReentry, default: true)
+        modDistantObjects = Defaults.bool(.modDistant, default: true)
         store.installStockCraftIfNeeded()
         reloadCraft()
     }
@@ -119,6 +137,10 @@ enum Defaults {
         case sensitivity = "controlSensitivity"
         case leftHanded = "leftHanded"
         case reduceEffects = "reduceEffects"
+        case modClouds = "modCloudsAndScattering"
+        case modPlumes = "modVolumetricPlumes"
+        case modReentry = "modReentryEffects"
+        case modDistant = "modDistantObjects"
     }
 
     static func set(_ value: Bool, _ key: Key) {

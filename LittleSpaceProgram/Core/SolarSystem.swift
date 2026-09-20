@@ -83,6 +83,17 @@ final class SolarSystem {
         self.bodies = [home, moon, outerMoon]
     }
 
+    /// The sun sits far enough away that its direction is the same everywhere in the
+    /// system, so one fixed unit vector serves every frame. Bodies rotate underneath it,
+    /// which is what produces day, night and the terminator.
+    let sunDirection = Vec2(1, 0)
+
+    /// Cosine of the sun's angle above the local horizon: 1 at noon, 0 at the
+    /// terminator, negative at night.
+    func sunElevation(at position: Vec2) -> Double {
+        position.normalized.dot(sunDirection)
+    }
+
     func body(id: String) -> CelestialBody {
         bodies.first { $0.id == id } ?? home
     }

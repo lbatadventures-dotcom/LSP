@@ -20,11 +20,30 @@ struct SettingsView: View {
                 }
                 Toggle("Haptics", isOn: $app.hapticsEnabled)
             }
+            Section {
+                modToggle("Clouds & Scattering",
+                          subtitle: "A cloud layer you fly up through, sunrise and sunset colours, and a lit limb around the planet from orbit.",
+                          isOn: $app.modCloudsAndScattering)
+                modToggle("Volumetric Plumes",
+                          subtitle: "Layered engine exhaust with shock diamonds at sea level that blooms wide in vacuum.",
+                          isOn: $app.modVolumetricPlumes)
+                modToggle("Reentry Effects",
+                          subtitle: "Plasma sheath and ember wake on atmospheric entry, scaled by heating.",
+                          isOn: $app.modReentryEffects)
+                modToggle("Distant Objects",
+                          subtitle: "Far-off moons and the sun render as bright flares, and the sky dims around them.",
+                          isOn: $app.modDistantObjects)
+            } header: {
+                Text("Visual mods")
+            } footer: {
+                Text("Each one is independent. Turn any of them off if you would rather have the frame rate.")
+            }
+
             Section("Display") {
                 Toggle("Advanced readouts", isOn: $app.showAdvancedReadouts)
                 Toggle("Reduce effects", isOn: $app.reduceEffects)
             } footer: {
-                Text("Reduce effects thins out exhaust particles and starfields. Worth turning on for longer sessions on battery.")
+                Text("Reduce effects halves texture resolution and thins out particles and starfields, without switching any mod off. Worth turning on for longer sessions on battery.")
             }
             Section("Universe") {
                 ForEach(SolarSystem.shared.bodies) { body in
@@ -42,6 +61,17 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func modToggle(_ title: String, subtitle: String, isOn: Binding<Bool>) -> some View {
+        Toggle(isOn: isOn) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
     }
 
     private func bodyDetail(_ body: CelestialBody) -> String {
